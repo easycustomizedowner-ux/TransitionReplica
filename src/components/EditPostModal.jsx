@@ -10,50 +10,51 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { supabase } from "@/lib/supabase";
 
 const categories = [
-  { 
-    name: "Fashion & Apparel", 
+  {
+    name: "Fashion & Apparel",
     examples: "Custom dresses, ethnic wear, cosplay, uniforms",
     icon: "👗"
   },
-  { 
-    name: "Jewelry & Accessories", 
+  {
+    name: "Jewelry & Accessories",
     examples: "Rings, pendants, resin art",
     icon: "💍"
   },
-  { 
-    name: "Furniture & Décor", 
+  {
+    name: "Furniture & Décor",
     examples: "Tables, wall art, interiors",
     icon: "🛋️"
   },
-  { 
-    name: "Footwear", 
+  {
+    name: "Footwear",
     examples: "Sneakers, boots, heels",
     icon: "👟"
   },
-  { 
-    name: "Gifting & Art", 
+  {
+    name: "Gifting & Art",
     examples: "Frames, journals, handmade gifts",
     icon: "🎁"
   },
-  { 
-    name: "Automotive", 
+  {
+    name: "Automotive",
     examples: "Seat covers, decals, car mods",
     icon: "🚗"
   },
-  { 
-    name: "Tech & Gadgets", 
+  {
+    name: "Tech & Gadgets",
     examples: "Phone cases, PC builds",
     icon: "📱"
   },
-  { 
-    name: "Corporate & Branding", 
+  {
+    name: "Corporate & Branding",
     examples: "T-shirts, merchandise, packaging",
     icon: "🏢"
   },
-  { 
-    name: "Other Custom Requests", 
+  {
+    name: "Other Custom Requests",
     examples: "Anything not listed",
     icon: "✨"
   }
@@ -72,20 +73,34 @@ export default function EditPostModal({ isOpen, onClose, post, onUpdate }) {
   const handleImageUpload = async (e) => {
     const files = Array.from(e.target.files);
     const uploadedUrls = [];
-    
+
     setIsLoading(true);
     for (const file of files) {
       try {
-        const { base44 } = await import('@/api/base44Client');
-        const { file_url } = await base44.integrations.Core.UploadFile({ file });
-        uploadedUrls.push(file_url);
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Math.random()}.${fileExt}`;
+        const filePath = `${Date.now()}_${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('ad-images')
+          .upload(filePath, file);
+
+        if (uploadError) {
+          throw uploadError;
+        }
+
+        const { data } = supabase.storage
+          .from('ad-images')
+          .getPublicUrl(filePath);
+
+        uploadedUrls.push(data.publicUrl);
       } catch (error) {
         console.error('Upload error:', error);
         alert('Failed to upload image. Please try again.');
       }
     }
     setIsLoading(false);
-    
+
     setFormData({ ...formData, images: [...formData.images, ...uploadedUrls] });
   };
 
@@ -138,11 +153,10 @@ export default function EditPostModal({ isOpen, onClose, post, onUpdate }) {
                   key={cat.name}
                   type="button"
                   onClick={() => setFormData({ ...formData, category: cat.name })}
-                  className={`p-3 rounded-lg text-left text-sm transition-all ${
-                    formData.category === cat.name
-                      ? 'bg-[#CEFF00]/20 border-2 border-[#CEFF00]'
-                      : 'glass-card hover:border-[#CEFF00]/50'
-                  }`}
+                  className={`p-3 rounded-lg text-left text-sm transition-all ${formData.category === cat.name
+                    ? 'bg-[#CEFF00]/20 border-2 border-[#CEFF00]'
+                    : 'glass-card hover:border-[#CEFF00]/50'
+                    }`}
                 >
                   <span className="text-lg mr-2">{cat.icon}</span>
                   <span className="text-white font-semibold text-xs">{cat.name}</span>
@@ -176,11 +190,10 @@ export default function EditPostModal({ isOpen, onClose, post, onUpdate }) {
                 id="edit-image-upload"
                 disabled={isLoading}
               />
-              <label 
-                htmlFor="edit-image-upload" 
-                className={`glow-button px-4 py-2 rounded-lg cursor-pointer inline-block text-sm ${
-                  isLoading ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
+              <label
+                htmlFor="edit-image-upload"
+                className={`glow-button px-4 py-2 rounded-lg cursor-pointer inline-block text-sm ${isLoading ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
               >
                 {isLoading ? (
                   <span className="flex items-center gap-2">
@@ -203,9 +216,9 @@ export default function EditPostModal({ isOpen, onClose, post, onUpdate }) {
                     />
                     <button
                       type="button"
-                      onClick={() => setFormData({ 
-                        ...formData, 
-                        images: formData.images.filter((_, i) => i !== index) 
+                      onClick={() => setFormData({
+                        ...formData,
+                        images: formData.images.filter((_, i) => i !== index)
                       })}
                       className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                     >

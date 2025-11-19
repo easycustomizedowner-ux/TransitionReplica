@@ -221,6 +221,30 @@ function CustomerDashboard() {
     },
   });
 
+  const acceptQuoteMutation = useMutation({
+    mutationFn: async (quote) => {
+      const { data, error } = await supabase.functions.invoke('accept_quote', {
+        body: { quote_id: quote.id, customer_id: userId }
+      });
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: (data) => {
+      toast.success("Quote accepted!");
+      queryClient.invalidateQueries({ queryKey: ['customer-quotes'] });
+      // Optionally open chat here if we get a thread_id
+      if (data?.thread_id) {
+        // We need to fetch the thread details or just open the chat window with the right context
+        // For now, just closing the modal and letting them click 'Chat' is fine, or we can auto-open.
+        // Let's auto-open if we have the quote details still.
+        // But selectedPost might be null if we close it.
+      }
+    },
+    onError: (error) => {
+      toast.error("Failed to accept quote: " + error.message);
+    }
+  });
+
   const handlePostSubmit = (formData) => {
     createPostMutation.mutate(formData);
   };
@@ -621,16 +645,36 @@ function CustomerDashboard() {
                         </div>
                       </div>
                       <p className="text-gray-300 mb-4">{quote.message}</p>
-                      <button
-                        onClick={() => {
-                          setSelectedPost(null);
-                          handleOpenChat(quote);
-                        }}
-                        className="w-full py-2 glow-button rounded-lg font-semibold flex items-center justify-center space-x-2"
-                      >
-                        <MessageCircle className="w-4 h-4" />
-                        <span>Chat with Vendor</span>
-                      </button>
+                      <div className="flex gap-3">
+                        <button
+                          onClick={() => {
+                            setSelectedPost(null);
+                            handleOpenChat(quote);
+                          }}
+                          className="flex-1 py-2 bg-white/5 hover:bg-white/10 rounded-lg font-semibold flex items-center justify-center space-x-2 transition-colors"
+                        >
+                          <MessageCircle className="w-4 h-4" />
+                          <span>Chat</span>
+                        </button>
+                        {quote.status !== 'accepted' && (
+                          <button
+                            onClick={() => acceptQuoteMutation.mutate(quote)}
+                            disabled={acceptQuoteMutation.isPending}
+                            className="flex-1 py-2 glow-button rounded-lg font-semibold flex items-center justify-center space-x-2"
+                          >
+                            {acceptQuoteMutation.isPending ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <span>Accept Quote</span>
+                            )}
+                          </button>
+                        )}
+                        {quote.status === 'accepted' && (
+                          <div className="flex-1 py-2 bg-green-500/20 text-green-400 rounded-lg font-semibold flex items-center justify-center">
+                            Accepted
+                          </div>
+                        )}
+                      </div>
                     </div>
                   ))
                 )}

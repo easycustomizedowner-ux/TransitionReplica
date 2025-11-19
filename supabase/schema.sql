@@ -182,10 +182,50 @@ create policy "Vendors can manage own inventory"
   on public.vendor_inventory for all
   using ( auth.uid() = vendor_id );
 
--- STORAGE BUCKETS (SQL to set up storage is complex, usually done via UI, but here is policy logic)
--- We assume buckets 'ad-images', 'profile-images', 'message-attachments' exist.
+-- STORAGE BUCKETS
+-- Create buckets if they don't exist
+insert into storage.buckets (id, name, public)
+values 
+  ('ad-images', 'ad-images', true),
+  ('profile-images', 'profile-images', true),
+  ('vendor-inventory', 'vendor-inventory', true),
+  ('message-attachments', 'message-attachments', false)
+on conflict (id) do nothing;
 
--- Storage Policies (Conceptual - needs to be applied to storage.objects)
--- ad-images: Public Read, Authenticated Upload
--- profile-images: Public Read, Owner Upload/Update
--- message-attachments: Private Read (Participants), Participant Upload
+-- Storage Policies
+
+-- ad-images
+create policy "Public Access"
+  on storage.objects for select
+  using ( bucket_id = 'ad-images' );
+
+create policy "Authenticated users can upload ad images"
+  on storage.objects for insert
+  with check ( bucket_id = 'ad-images' and auth.role() = 'authenticated' );
+
+-- vendor-inventory
+create policy "Public Access Inventory"
+  on storage.objects for select
+  using ( bucket_id = 'vendor-inventory' );
+
+create policy "Vendors can upload inventory images"
+  on storage.objects for insert
+  with check ( bucket_id = 'vendor-inventory' and auth.role() = 'authenticated' );
+
+-- profile-images
+create policy "Public Access Profiles"
+  on storage.objects for select
+  using ( bucket_id = 'profile-images' );
+
+create policy "Users can upload own profile image"
+  on storage.objects for insert
+  with check ( bucket_id = 'profile-images' and auth.uid() = (storage.foldername(name))[1]::uuid );
+
+-- message-attachments
+create policy "Participants can view attachments"
+  on storage.objects for select
+  using ( bucket_id = 'message-attachments' and auth.role() = 'authenticated' ); -- Simplified for now
+
+create policy "Participants can upload attachments"
+  on storage.objects for insert
+  with check ( bucket_id = 'message-attachments' and auth.role() = 'authenticated' );

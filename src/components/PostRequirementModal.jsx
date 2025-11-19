@@ -17,50 +17,51 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"; // Added Dialog imports
+import { supabase } from "@/lib/supabase";
 
 const categories = [
-  { 
-    name: "Fashion & Apparel", 
+  {
+    name: "Fashion & Apparel",
     examples: "Custom dresses, ethnic wear, cosplay, uniforms",
     icon: "👗"
   },
-  { 
-    name: "Jewelry & Accessories", 
+  {
+    name: "Jewelry & Accessories",
     examples: "Rings, pendants, resin art",
     icon: "💍"
   },
-  { 
-    name: "Furniture & Décor", 
+  {
+    name: "Furniture & Décor",
     examples: "Tables, wall art, interiors",
     icon: "🛋️"
   },
-  { 
-    name: "Footwear", 
+  {
+    name: "Footwear",
     examples: "Sneakers, boots, heels",
     icon: "👟"
   },
-  { 
-    name: "Gifting & Art", 
+  {
+    name: "Gifting & Art",
     examples: "Frames, journals, handmade gifts",
     icon: "🎁"
   },
-  { 
-    name: "Automotive", 
+  {
+    name: "Automotive",
     examples: "Seat covers, decals, car mods",
     icon: "🚗"
   },
-  { 
-    name: "Tech & Gadgets", 
+  {
+    name: "Tech & Gadgets",
     examples: "Phone cases, PC builds",
     icon: "📱"
   },
-  { 
-    name: "Corporate & Branding", 
+  {
+    name: "Corporate & Branding",
     examples: "T-shirts, merchandise, packaging",
     icon: "🏢"
   },
-  { 
-    name: "Other Custom Requests", 
+  {
+    name: "Other Custom Requests",
     examples: "Anything not listed",
     icon: "✨"
   }
@@ -106,18 +107,32 @@ export default function PostRequirementModal({ isOpen, onClose, onSubmit }) { //
   const handleImageUpload = async (e) => {
     const files = Array.from(e.target.files);
     const uploadedUrls = [];
-    
+
     for (const file of files) {
       try {
-        const { base44 } = await import('@/api/base44Client');
-        const { file_url } = await base44.integrations.Core.UploadFile({ file });
-        uploadedUrls.push(file_url);
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Math.random()}.${fileExt}`;
+        const filePath = `${Date.now()}_${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('ad-images')
+          .upload(filePath, file);
+
+        if (uploadError) {
+          throw uploadError;
+        }
+
+        const { data } = supabase.storage
+          .from('ad-images')
+          .getPublicUrl(filePath);
+
+        uploadedUrls.push(data.publicUrl);
       } catch (error) {
         console.error('Upload error:', error);
         alert('Failed to upload image. Please try again.');
       }
     }
-    
+
     setFormData({ ...formData, images: [...formData.images, ...uploadedUrls] });
   };
 
@@ -136,21 +151,19 @@ export default function PostRequirementModal({ isOpen, onClose, onSubmit }) { //
           {[1, 2, 3, 4].map((s) => (
             <div key={s} className="flex items-center">
               <div
-                className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-sm sm:text-base font-semibold transition-colors ${
-                  s === step
-                    ? "bg-[#CEFF00] text-[#0D0D0D]"
-                    : s < step
+                className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-sm sm:text-base font-semibold transition-colors ${s === step
+                  ? "bg-[#CEFF00] text-[#0D0D0D]"
+                  : s < step
                     ? "bg-[#CEFF00]/30 text-white"
                     : "bg-white/10 text-gray-400"
-                }`}
+                  }`}
               >
                 {s}
               </div>
               {s < 4 && (
                 <div
-                  className={`h-1 w-6 sm:w-12 mx-1 sm:mx-2 transition-colors ${
-                    s < step ? "bg-[#CEFF00]" : "bg-white/10"
-                  }`}
+                  className={`h-1 w-6 sm:w-12 mx-1 sm:mx-2 transition-colors ${s < step ? "bg-[#CEFF00]" : "bg-white/10"
+                    }`}
                 />
               )}
             </div>
@@ -175,11 +188,10 @@ export default function PostRequirementModal({ isOpen, onClose, onSubmit }) { //
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => setFormData({ ...formData, category: cat.name })}
-                    className={`p-4 rounded-xl text-left transition-all ${
-                      formData.category === cat.name
-                        ? 'bg-[#CEFF00]/20 border-2 border-[#CEFF00]'
-                        : 'glass-card hover:border-[#CEFF00]/50'
-                    }`}
+                    className={`p-4 rounded-xl text-left transition-all ${formData.category === cat.name
+                      ? 'bg-[#CEFF00]/20 border-2 border-[#CEFF00]'
+                      : 'glass-card hover:border-[#CEFF00]/50'
+                      }`}
                   >
                     <div className="flex items-start gap-3">
                       <span className="text-2xl">{cat.icon}</span>
@@ -285,9 +297,9 @@ export default function PostRequirementModal({ isOpen, onClose, onSubmit }) { //
                       />
                       <button
                         type="button"
-                        onClick={() => setFormData({ 
-                          ...formData, 
-                          images: formData.images.filter((_, i) => i !== index) 
+                        onClick={() => setFormData({
+                          ...formData,
+                          images: formData.images.filter((_, i) => i !== index)
                         })}
                         className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                       >

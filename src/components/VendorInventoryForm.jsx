@@ -10,6 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { supabase } from "@/lib/supabase";
 
 const categories = [
   { name: "Fashion & Apparel", icon: "👗" },
@@ -38,12 +39,26 @@ export default function VendorInventoryForm({ isOpen, onClose, item, onSubmit })
   const handleImageUpload = async (e) => {
     const files = Array.from(e.target.files);
     setIsLoading(true);
-    
+
     for (const file of files) {
       try {
-        const { base44 } = await import('@/api/base44Client');
-        const { file_url } = await base44.integrations.Core.UploadFile({ file });
-        setFormData(prev => ({ ...prev, images: [...prev.images, file_url] }));
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Math.random()}.${fileExt}`;
+        const filePath = `${Date.now()}_${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('inventory-images')
+          .upload(filePath, file);
+
+        if (uploadError) {
+          throw uploadError;
+        }
+
+        const { data } = supabase.storage
+          .from('inventory-images')
+          .getPublicUrl(filePath);
+
+        setFormData(prev => ({ ...prev, images: [...prev.images, data.publicUrl] }));
       } catch (error) {
         console.error('Upload error:', error);
         alert('Failed to upload image');
@@ -53,8 +68,8 @@ export default function VendorInventoryForm({ isOpen, onClose, item, onSubmit })
   };
 
   const handleSubmit = () => {
-    if (!formData.product_name || !formData.description || !formData.category || 
-        !formData.price || !formData.stock) {
+    if (!formData.product_name || !formData.description || !formData.category ||
+      !formData.price || !formData.stock) {
       alert("Please fill in all required fields");
       return;
     }
@@ -124,11 +139,10 @@ export default function VendorInventoryForm({ isOpen, onClose, item, onSubmit })
               <button
                 type="button"
                 onClick={() => setFormData({ ...formData, is_featured: !formData.is_featured })}
-                className={`w-full h-10 rounded-lg flex items-center justify-center gap-2 transition-all ${
-                  formData.is_featured 
-                    ? 'bg-[#CEFF00]/20 border-2 border-[#CEFF00]' 
-                    : 'bg-white/5 border border-[#CEFF00]/20'
-                }`}
+                className={`w-full h-10 rounded-lg flex items-center justify-center gap-2 transition-all ${formData.is_featured
+                  ? 'bg-[#CEFF00]/20 border-2 border-[#CEFF00]'
+                  : 'bg-white/5 border border-[#CEFF00]/20'
+                  }`}
               >
                 <Star className={`w-4 h-4 ${formData.is_featured ? 'fill-[#CEFF00] text-[#CEFF00]' : 'text-gray-400'}`} />
                 <span className="text-white">{formData.is_featured ? 'Featured' : 'Not Featured'}</span>
@@ -144,11 +158,10 @@ export default function VendorInventoryForm({ isOpen, onClose, item, onSubmit })
                   key={cat.name}
                   type="button"
                   onClick={() => setFormData({ ...formData, category: cat.name })}
-                  className={`p-3 rounded-lg text-left text-xs transition-all ${
-                    formData.category === cat.name
-                      ? 'bg-[#CEFF00]/20 border-2 border-[#CEFF00]'
-                      : 'glass-card hover:border-[#CEFF00]/50'
-                  }`}
+                  className={`p-3 rounded-lg text-left text-xs transition-all ${formData.category === cat.name
+                    ? 'bg-[#CEFF00]/20 border-2 border-[#CEFF00]'
+                    : 'glass-card hover:border-[#CEFF00]/50'
+                    }`}
                 >
                   <span className="text-lg mr-1">{cat.icon}</span>
                   <span className="text-white font-semibold">{cat.name}</span>
@@ -170,11 +183,10 @@ export default function VendorInventoryForm({ isOpen, onClose, item, onSubmit })
                 id="inventory-image-upload"
                 disabled={isLoading}
               />
-              <label 
-                htmlFor="inventory-image-upload" 
-                className={`glow-button px-4 py-2 rounded-lg cursor-pointer inline-block text-sm ${
-                  isLoading ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
+              <label
+                htmlFor="inventory-image-upload"
+                className={`glow-button px-4 py-2 rounded-lg cursor-pointer inline-block text-sm ${isLoading ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
               >
                 {isLoading ? (
                   <span className="flex items-center gap-2">
@@ -198,9 +210,9 @@ export default function VendorInventoryForm({ isOpen, onClose, item, onSubmit })
                     />
                     <button
                       type="button"
-                      onClick={() => setFormData({ 
-                        ...formData, 
-                        images: formData.images.filter((_, i) => i !== index) 
+                      onClick={() => setFormData({
+                        ...formData,
+                        images: formData.images.filter((_, i) => i !== index)
                       })}
                       className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                     >
