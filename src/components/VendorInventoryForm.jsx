@@ -47,7 +47,7 @@ export default function VendorInventoryForm({ isOpen, onClose, item, onSubmit })
         const filePath = `${Date.now()}_${fileName}`;
 
         const { error: uploadError } = await supabase.storage
-          .from('inventory-images')
+          .from('vendor-inventory')
           .upload(filePath, file);
 
         if (uploadError) {
@@ -55,7 +55,7 @@ export default function VendorInventoryForm({ isOpen, onClose, item, onSubmit })
         }
 
         const { data } = supabase.storage
-          .from('inventory-images')
+          .from('vendor-inventory')
           .getPublicUrl(filePath);
 
         setFormData(prev => ({ ...prev, images: [...prev.images, data.publicUrl] }));
