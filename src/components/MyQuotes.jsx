@@ -9,8 +9,10 @@ export default function MyQuotes({ userId, userRole, onOpenChat }) {
     const queryClient = useQueryClient();
     const [selectedQuote, setSelectedQuote] = useState(null);
 
+    console.log("MyQuotes - userId:", userId, "userRole:", userRole);
+
     // Fetch quotes based on role
-    const { data: quotes = [], isLoading } = useQuery({
+    const { data: quotes = [], isLoading, error } = useQuery({
         queryKey: ['my-quotes', userId, userRole],
         queryFn: async () => {
             if (!userId) return [];
@@ -40,7 +42,12 @@ export default function MyQuotes({ userId, userRole, onOpenChat }) {
             }
 
             const { data, error } = await query;
-            if (error) throw error;
+            if (error) {
+                console.error("MyQuotes query error:", error);
+                throw error;
+            }
+
+            console.log("MyQuotes - fetched data:", data);
 
             return data.map(quote => ({
                 ...quote,
@@ -114,6 +121,27 @@ export default function MyQuotes({ userId, userRole, onOpenChat }) {
             default: return 'bg-gray-100 text-gray-700';
         }
     };
+
+    // Show error if any
+    if (error) {
+        return (
+            <div className="glass-card p-12 rounded-2xl text-center">
+                <Package className="w-16 h-16 text-red-300 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">Error Loading Quotes</h3>
+                <p className="text-gray-600">{error.message}</p>
+            </div>
+        );
+    }
+
+    // Show message if userId is not available yet
+    if (!userId) {
+        return (
+            <div className="glass-card p-12 rounded-2xl text-center">
+                <Loader2 className="w-16 h-16 text-indigo-600 animate-spin mx-auto mb-4" />
+                <p className="text-gray-600">Loading user information...</p>
+            </div>
+        );
+    }
 
     if (isLoading) {
         return (
