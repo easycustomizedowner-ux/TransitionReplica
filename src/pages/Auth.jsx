@@ -12,6 +12,8 @@ import { toast } from "sonner";
 function Auth() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [isAuthChecking, setIsAuthChecking] = useState(true);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState("signin");
@@ -31,28 +33,40 @@ function Auth() {
   useEffect(() => {
     // Check if user is already logged in
     const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      // Don't check if user is actively logging in
+      if (isLoggingIn) {
+        setIsAuthChecking(false);
+        return;
+      }
 
-      if (session) {
-        // Fetch user profile to get role
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', session.user.id)
-          .single();
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
 
-        if (profile) {
-          // Redirect to appropriate dashboard
-          if (profile.role === 'customer') {
-            navigate(createPageUrl('CustomerDashboard'));
-          } else {
-            navigate(createPageUrl('VendorDashboard'));
+        if (session) {
+          // Fetch user profile to get role
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', session.user.id)
+            .single();
+
+          if (profile) {
+            // Redirect to appropriate dashboard with replace to prevent back button issues
+            if (profile.role === 'customer') {
+              navigate(createPageUrl('CustomerDashboard'), { replace: true });
+            } else {
+              navigate(createPageUrl('VendorDashboard'), { replace: true });
+            }
           }
         }
+      } catch (error) {
+        console.error('Auth check error:', error);
+      } finally {
+        setIsAuthChecking(false);
       }
     };
     checkAuth();
-  }, [navigate]);
+  }, []); // Empty dependency - only run once on mount
 
   const handleSignIn = async (e) => {
     e.preventDefault();
@@ -63,6 +77,7 @@ function Auth() {
     }
 
     setIsLoading(true);
+    setIsLoggingIn(true);
     setError("");
 
     try {
@@ -90,16 +105,18 @@ function Auth() {
 
       toast.success("Signed in successfully");
 
-      // Redirect to dashboard
+      // Redirect to dashboard with replace to prevent back button issues
       if (profile.role === 'customer') {
-        navigate(createPageUrl('CustomerDashboard'));
+        navigate(createPageUrl('CustomerDashboard'), { replace: true });
       } else {
-        navigate(createPageUrl('VendorDashboard'));
+        navigate(createPageUrl('VendorDashboard'), { replace: true });
       }
     } catch (err) {
       console.error("Sign in error:", err);
       setError(err.message || "An error occurred. Please try again.");
+    } finally {
       setIsLoading(false);
+      setIsLoggingIn(false);
     }
   };
 
@@ -122,6 +139,7 @@ function Auth() {
     }
 
     setIsLoading(true);
+    setIsLoggingIn(true);
     setError("");
 
     try {
@@ -167,19 +185,33 @@ function Auth() {
 
         toast.success("Account created successfully");
 
-        // Redirect to dashboard
+        // Redirect to dashboard with replace to prevent back button issues
         if (signUpData.role === 'customer') {
-          navigate(createPageUrl('CustomerDashboard'));
+          navigate(createPageUrl('CustomerDashboard'), { replace: true });
         } else {
-          navigate(createPageUrl('VendorDashboard'));
+          navigate(createPageUrl('VendorDashboard'), { replace: true });
         }
       }
     } catch (err) {
       console.error("Sign up error:", err);
       setError(err.message || "An error occurred. Please try again.");
+    } finally {
       setIsLoading(false);
+      setIsLoggingIn(false);
     }
   };
+
+  // Show loading screen while checking authentication
+  if (isAuthChecking) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-gray-900" />
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white text-gray-900 font-sans selection:bg-indigo-100 selection:text-indigo-900 overflow-hidden flex items-center justify-center px-4 py-12 relative">
