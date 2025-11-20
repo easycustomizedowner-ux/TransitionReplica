@@ -30,20 +30,48 @@ function CustomerDashboard() {
   const [isItemDetailsOpen, setIsItemDetailsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [userLoading, setUserLoading] = useState(true);
+  const [userName, setUserName] = useState("User");
+  const [userEmail, setUserEmail] = useState("");
   const [userId, setUserId] = useState(null);
 
-  const userEmail = localStorage.getItem('userEmail');
-  const userName = localStorage.getItem('userName');
-
   useEffect(() => {
-    const getSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        setUserId(session.user.id);
+    const getUser = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          setUserId(user.id);
+          setUserEmail(user.email);
+          // Get profile for name
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('display_name')
+            .eq('id', user.id)
+            .single();
+          if (profile) setUserName(profile.display_name);
+        } else {
+          // User not found, ensure states are reset or default
+          setUserId(null);
+          setUserEmail("");
+          setUserName("User");
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      } finally {
+        setUserLoading(false);
       }
     };
-    getSession();
+
+    getUser();
   }, []);
+
+  if (userLoading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <Loader2 className="w-12 h-12 text-indigo-600 animate-spin" />
+      </div>
+    );
+  }
 
   const { data: posts = [], isLoading: postsLoading } = useQuery({
     queryKey: ['customer-posts', userId],
@@ -72,9 +100,10 @@ function CustomerDashboard() {
         .from('quotes')
         .select(`
           *,
-          vendor:vendor_id (display_name, email)
+          vendor:vendor_id (display_name, email),
+          ad:ad_id (created_by)
         `)
-        .eq('customer_id', userId)
+        .eq('ad.created_by', userId)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -328,7 +357,7 @@ function CustomerDashboard() {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-12">
             <div>
               <h1 className="text-4xl font-bold mb-2">
-                Welcome, <span className="neon-text">{userName}</span>
+                Welcome, <span className="text-indigo-600">{userName}</span>
               </h1>
               <p className="text-gray-600">Manage your product requests and quotes</p>
             </div>
@@ -351,7 +380,7 @@ function CustomerDashboard() {
                   <p className="text-gray-600 text-sm mb-1">Total Requests</p>
                   <p className="text-3xl font-bold">{posts.length}</p>
                 </div>
-                <Package className="w-12 h-12 text-[#CEFF00]" />
+                <Package className="w-12 h-12 text-indigo-600" />
               </div>
             </div>
             <div className="glass-card p-6 rounded-2xl">
@@ -360,7 +389,7 @@ function CustomerDashboard() {
                   <p className="text-gray-600 text-sm mb-1">Total Quotes</p>
                   <p className="text-3xl font-bold">{allQuotes.length}</p>
                 </div>
-                <Eye className="w-12 h-12 text-[#CEFF00]" />
+                <Eye className="w-12 h-12 text-indigo-600" />
               </div>
             </div>
             <div className="glass-card p-6 rounded-2xl">
@@ -371,7 +400,7 @@ function CustomerDashboard() {
                     {new Set(allQuotes.map(q => q.vendor_email)).size}
                   </p>
                 </div>
-                <MessageCircle className="w-12 h-12 text-[#CEFF00]" />
+                <MessageCircle className="w-12 h-12 text-indigo-600" />
               </div>
             </div>
           </div>
@@ -381,7 +410,7 @@ function CustomerDashboard() {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
               <div>
                 <h2 className="text-3xl font-bold mb-2 flex items-center gap-3">
-                  <ShoppingBag className="w-8 h-8 text-[#CEFF00]" />
+                  <ShoppingBag className="w-8 h-8 text-indigo-600" />
                   Browse Vendor Inventory
                 </h2>
                 <p className="text-gray-600">Discover pre-listed items from vendors</p>
@@ -404,7 +433,7 @@ function CustomerDashboard() {
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="w-full h-10 bg-white border border-gray-200 border border-gray-200 text-gray-900 rounded-lg px-4 focus:border-[#CEFF00] focus:outline-none"
+                  className="w-full h-10 bg-white border border-gray-200 border border-gray-200 text-gray-900 rounded-lg px-4 focus:border-indigo-600 focus:outline-none"
                 >
                   <option value="all" className="bg-white">All Categories</option>
                   {categories.map(cat => (
@@ -417,7 +446,7 @@ function CustomerDashboard() {
             {/* Inventory Grid */}
             {inventoryLoading ? (
               <div className="text-center py-12">
-                <Loader2 className="w-12 h-12 text-[#CEFF00] animate-spin mx-auto" />
+                <Loader2 className="w-12 h-12 text-indigo-600 animate-spin mx-auto" />
               </div>
             ) : filteredInventory.length === 0 ? (
               <div className="glass-card p-12 rounded-2xl text-center">
@@ -470,7 +499,7 @@ function CustomerDashboard() {
                       </h3>
                       <p className="text-xs text-gray-600 mb-2">{item.category}</p>
                       <div className="flex items-center justify-between">
-                        <p className="text-xl font-bold text-[#CEFF00]">₹{item.price}</p>
+                        <p className="text-xl font-bold text-indigo-600">₹{item.price}</p>
                         <p className="text-xs text-gray-600">by {item.vendor_name}</p>
                       </div>
                     </div>
@@ -485,7 +514,7 @@ function CustomerDashboard() {
             <h2 className="text-2xl font-bold mb-6">My Custom Requests</h2>
             {postsLoading ? (
               <div className="text-center py-12">
-                <Loader2 className="w-12 h-12 text-[#CEFF00] animate-spin mx-auto" />
+                <Loader2 className="w-12 h-12 text-indigo-600 animate-spin mx-auto" />
               </div>
             ) : posts.length === 0 ? (
               <div className="glass-card p-12 rounded-2xl text-center">
@@ -512,7 +541,7 @@ function CustomerDashboard() {
                       <div className="mb-4">
                         <div className="flex items-start justify-between mb-2">
                           <h3 className="text-lg font-semibold line-clamp-2 flex-1 pr-2">{post.title}</h3>
-                          <span className="px-2 py-1 bg-gray-200 text-[#CEFF00] text-xs rounded-full flex-shrink-0">
+                          <span className="px-2 py-1 bg-gray-200 text-black text-xs rounded-full flex-shrink-0">
                             {post.category}
                           </span>
                         </div>
@@ -524,12 +553,12 @@ function CustomerDashboard() {
                                 key={idx}
                                 src={img}
                                 alt={`${post.title} ${idx + 1}`}
-                                className="w-16 h-16 object-cover rounded-lg flex-shrink-0"
-                                onError={(e) => e.target.src = 'https://via.placeholder.com/64?text=Image'}
+                                className="w-24 h-24 object-cover rounded-lg flex-shrink-0"
+                                onError={(e) => e.target.src = 'https://via.placeholder.com/96?text=Image'}
                               />
                             ))}
                             {post.images.length > 3 && (
-                              <div className="w-16 h-16 bg-white border border-gray-200 rounded-lg flex items-center justify-center text-xs text-gray-600">
+                              <div className="w-24 h-24 bg-white border border-gray-200 rounded-lg flex items-center justify-center text-xs text-gray-600">
                                 +{post.images.length - 3}
                               </div>
                             )}
@@ -537,7 +566,7 @@ function CustomerDashboard() {
                         )}
                       </div>
                       <div className="flex items-center justify-between mb-4">
-                        <span className="text-2xl font-bold text-[#CEFF00]">₹{post.budget}</span>
+                        <span className="text-2xl font-bold text-indigo-600">₹{post.budget}</span>
                         <span className="text-sm text-gray-600">{quotesCount} quotes</span>
                       </div>
                       <div className="grid grid-cols-2 gap-2 mb-2">
@@ -558,7 +587,7 @@ function CustomerDashboard() {
                       </div>
                       <button
                         onClick={() => handleViewQuotes(post)}
-                        className="w-full py-2 bg-black/10 border border-[#CEFF00]/30 rounded-lg font-semibold hover:bg-gray-200 transition-colors flex items-center justify-center space-x-2"
+                        className="w-full py-2 bg-black/10 border border-indigo-200/30 rounded-lg font-semibold hover:bg-gray-200 transition-colors flex items-center justify-center space-x-2"
                       >
                         <Eye className="w-4 h-4" />
                         <span>View Quotes</span>
@@ -640,7 +669,7 @@ function CustomerDashboard() {
                           <p className="text-sm text-gray-600">{quote.vendor_email}</p>
                         </div>
                         <div className="text-right">
-                          <p className="text-2xl font-bold text-[#CEFF00]">₹{quote.price_total}</p>
+                          <p className="text-2xl font-bold text-indigo-600">₹{quote.price_total}</p>
                           <p className="text-sm text-gray-600">{quote.delivery_days} days</p>
                         </div>
                       </div>

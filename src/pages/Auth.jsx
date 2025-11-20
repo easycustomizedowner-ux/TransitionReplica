@@ -31,51 +31,45 @@ function Auth() {
     role: ""
   });
 
-  // AUTH DISABLED FOR TESTING ONLY
-  // useEffect(() => {
-  //   // Check if user is already logged in
-  //   const checkAuth = async () => {
-  //     // Only run once - prevent multiple checks
-  //     if (hasCheckedAuth.current) {
-  //       setIsAuthChecking(false);
-  //       return;
-  //     }
-  //
-  //     hasCheckedAuth.current = true;
-
-  //     try {
-  //       const { data: { session } } = await supabase.auth.getSession();
-
-  //       if (session) {
-  //         // Fetch user profile to get role
-  //         const { data: profile } = await supabase
-  //           .from('profiles')
-  //           .select('role')
-  //           .eq('id', session.user.id)
-  //           .single();
-
-  //         if (profile) {
-  //           // Redirect to appropriate dashboard with replace to prevent back button issues
-  //           if (profile.role === 'customer') {
-  //             navigate(createPageUrl('CustomerDashboard'), { replace: true });
-  //           } else {
-  //             navigate(createPageUrl('VendorDashboard'), { replace: true });
-  //           }
-  //         }
-  //       }
-  //     } catch (error) {
-  //       console.error('Auth check error:', error);
-  //     } finally {
-  //       setIsAuthChecking(false);
-  //     }
-  //   };
-  //   checkAuth();
-  // }, []); // Empty dependency - only run once on mount
-
-  // AUTH DISABLED: Set auth checking to false immediately
   useEffect(() => {
-    setIsAuthChecking(false);
-  }, []);
+    // Check if user is already logged in
+    const checkAuth = async () => {
+      // Only run once - prevent multiple checks
+      if (hasCheckedAuth.current) {
+        setIsAuthChecking(false);
+        return;
+      }
+
+      hasCheckedAuth.current = true;
+
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+
+        if (session) {
+          // Fetch user profile to get role
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', session.user.id)
+            .single();
+
+          if (profile) {
+            // Redirect to appropriate dashboard with replace to prevent back button issues
+            if (profile.role === 'customer') {
+              navigate(createPageUrl('CustomerDashboard'), { replace: true });
+            } else {
+              navigate(createPageUrl('VendorDashboard'), { replace: true });
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Auth check error:', error);
+      } finally {
+        setIsAuthChecking(false);
+      }
+    };
+    checkAuth();
+  }, []); // Empty dependency - only run once on mount
 
   const handleSignIn = async (e) => {
     e.preventDefault();
@@ -250,7 +244,7 @@ function Auth() {
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold mb-2">
               <span className="text-gray-900">EASY</span>
-              <span className="neon-text">CUSTOMIZED</span>
+              <span className="text-indigo-600">CUSTOMIZED</span>
             </h1>
             <p className="text-gray-600">
               {activeTab === "signin" ? "Welcome Back" : "Create Your Account"}
@@ -273,18 +267,12 @@ function Auth() {
 
           {/* Tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-8 bg-gray-100 p-1 rounded-xl">
+            <TabsList className="grid w-full grid-cols-1 mb-8 bg-gray-100 p-1 rounded-xl">
               <TabsTrigger
                 value="signin"
                 className="rounded-lg data-[state=active]:bg-black data-[state=active]:text-white transition-all text-gray-700"
               >
                 Sign In
-              </TabsTrigger>
-              <TabsTrigger
-                value="signup"
-                className="rounded-lg data-[state=active]:bg-black data-[state=active]:text-white transition-all text-gray-700"
-              >
-                Sign Up
               </TabsTrigger>
             </TabsList>
 
@@ -344,128 +332,31 @@ function Auth() {
                 </button>
               </form>
 
-              <p className="text-center text-gray-400 text-sm mt-6">
-                New to EASYCUSTOMIZED?{" "}
+              <div className="mt-6 grid grid-cols-2 gap-3">
                 <button
-                  onClick={() => setActiveTab("signup")}
-                  className="text-indigo-600 hover:underline font-semibold"
+                  type="button"
+                  onClick={() => setSignInData({ email: 'test@test.com', password: 'password' })}
+                  className="py-2 px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-lg font-medium transition-colors"
                 >
-                  Sign up to create your account
+                  Customer Demo
                 </button>
+                <button
+                  type="button"
+                  onClick={() => setSignInData({ email: 'vendortest@test.com', password: 'password' })}
+                  className="py-2 px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-lg font-medium transition-colors"
+                >
+                  Vendor Demo
+                </button>
+              </div>
+
+              <p className="text-center text-gray-400 text-sm mt-6">
+                Sign up is currently disabled for testing.
+                <br />
+                Please use the demo accounts above.
               </p>
             </TabsContent>
 
-            {/* Sign Up Form */}
-            <TabsContent value="signup">
-              <form onSubmit={handleSignUp} className="space-y-5">
-                <div>
-                  <Label htmlFor="signup-name" className="text-gray-900 font-medium mb-2 block">Full Name</Label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <Input
-                      id="signup-name"
-                      type="text"
-                      placeholder="John Doe"
-                      value={signUpData.name}
-                      onChange={(e) => setSignUpData({ ...signUpData, name: e.target.value })}
-                      className="bg-white border-gray-300 text-gray-900 pl-11 h-12 focus:border-black focus:ring-1 focus:ring-black"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="signup-email" className="text-gray-900 font-medium mb-2 block">Email</Label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <Input
-                      id="signup-email"
-                      type="email"
-                      placeholder="you@example.com"
-                      value={signUpData.email}
-                      onChange={(e) => setSignUpData({ ...signUpData, email: e.target.value })}
-                      className="bg-white border-gray-300 text-gray-900 pl-11 h-12 focus:border-black focus:ring-1 focus:ring-black"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="signup-role" className="text-gray-900 font-medium mb-2 block">I want to</Label>
-                  <select
-                    id="signup-role"
-                    value={signUpData.role}
-                    onChange={(e) => setSignUpData({ ...signUpData, role: e.target.value })}
-                    className="w-full h-12 bg-white border border-gray-300 text-gray-900 rounded-lg px-4 focus:border-black focus:ring-1 focus:ring-black focus:outline-none"
-                  >
-                    <option value="" className="bg-white">Select your role</option>
-                    <option value="customer" className="bg-white">Buy Products (Customer)</option>
-                    <option value="vendor" className="bg-white">Sell Products (Vendor)</option>
-                  </select>
-                </div>
-
-                <div>
-                  <Label htmlFor="signup-password" className="text-gray-900 font-medium mb-2 block">Password</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <Input
-                      id="signup-password"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="••••••••"
-                      value={signUpData.password}
-                      onChange={(e) => setSignUpData({ ...signUpData, password: e.target.value })}
-                      className="bg-white border-gray-300 text-gray-900 pl-11 pr-11 h-12 focus:border-black focus:ring-1 focus:ring-black"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-900"
-                    >
-                      {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                    </button>
-                  </div>
-                  <p className="text-xs text-gray-400 mt-1">Must be at least 6 characters</p>
-                </div>
-
-                <div>
-                  <Label htmlFor="signup-confirm-password" className="text-gray-900 font-medium mb-2 block">Confirm Password</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <Input
-                      id="signup-confirm-password"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="••••••••"
-                      value={signUpData.confirmPassword}
-                      onChange={(e) => setSignUpData({ ...signUpData, confirmPassword: e.target.value })}
-                      className="bg-white border-gray-300 text-gray-900 pl-11 pr-11 h-12 focus:border-black focus:ring-1 focus:ring-black"
-                    />
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full py-3.5 glow-button rounded-xl font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
-                >
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="w-5 h-5 animate-spin" />
-                      <span>Creating account...</span>
-                    </>
-                  ) : (
-                    <span>Sign Up</span>
-                  )}
-                </button>
-              </form>
-
-              <p className="text-center text-gray-400 text-sm mt-6">
-                Already have an account?{" "}
-                <button
-                  onClick={() => setActiveTab("signin")}
-                  className="text-indigo-600 hover:underline font-semibold"
-                >
-                  Sign in here
-                </button>
-              </p>
-            </TabsContent>
+            {/* Sign Up Form Removed */}
           </Tabs>
         </div>
       </motion.div>

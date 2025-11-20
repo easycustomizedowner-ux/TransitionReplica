@@ -30,20 +30,52 @@ function VendorDashboard() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [userId, setUserId] = useState(null);
+  const [userLoading, setUserLoading] = useState(true);
+  const [userName, setUserName] = useState("User");
+  const [userEmail, setUserEmail] = useState("");
   const [uploadingImage, setUploadingImage] = useState(false);
 
-  const userEmail = localStorage.getItem('userEmail');
-  const userName = localStorage.getItem('userName');
-
   useEffect(() => {
-    const getSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        setUserId(session.user.id);
+    const getUser = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          setUserId(user.id);
+          setUserEmail(user.email);
+          // Get profile for name
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('display_name')
+            .eq('id', user.id)
+            .single();
+          if (profile) setUserName(profile.display_name);
+          else setUserName("Vendor"); // Default if profile not found
+        } else {
+          // Handle case where user is not found (e.g., redirect to login or show guest view)
+          setUserId(null);
+          setUserEmail("");
+          setUserName("Guest");
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        setUserId(null);
+        setUserEmail("");
+        setUserName("Guest");
+      } finally {
+        setUserLoading(false);
       }
     };
-    getSession();
+
+    getUser();
   }, []);
+
+  if (userLoading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <Loader2 className="w-12 h-12 text-indigo-600 animate-spin" />
+      </div>
+    );
+  }
 
   // Fetch all customer posts (ads)
   const { data: allPosts = [], isLoading: postsLoading } = useQuery({
@@ -345,7 +377,7 @@ function VendorDashboard() {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-12">
             <div>
               <h1 className="text-4xl font-bold mb-2">
-                Vendor Dashboard <span className="text-[#CEFF00]">.</span>
+                Vendor Dashboard <span className="text-indigo-600">.</span>
               </h1>
               <p className="text-gray-600">Welcome back, {userName}</p>
             </div>
@@ -375,7 +407,7 @@ function VendorDashboard() {
                   <h3 className="text-3xl font-bold mt-1">₹{totalRevenue.toLocaleString()}</h3>
                 </div>
                 <div className="p-3 bg-black/10 rounded-xl">
-                  <DollarSign className="w-6 h-6 text-[#CEFF00]" />
+                  <DollarSign className="w-6 h-6 text-indigo-600" />
                 </div>
               </div>
               <div className="flex items-center text-sm text-green-400">
@@ -430,7 +462,7 @@ function VendorDashboard() {
                   <select
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="bg-white border border-gray-200 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:border-[#CEFF00] outline-none"
+                    className="bg-white border border-gray-200 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:border-indigo-600 outline-none"
                   >
                     <option value="all" className="bg-white">All Categories</option>
                     {categories.map(cat => (
@@ -448,7 +480,7 @@ function VendorDashboard() {
                   placeholder="Search requirements..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-white border border-gray-200 border border-gray-200 rounded-xl py-3 pl-12 pr-4 focus:border-[#CEFF00] outline-none transition-colors"
+                  className="w-full bg-white border border-gray-200 border border-gray-200 rounded-xl py-3 pl-12 pr-4 focus:border-indigo-600 outline-none transition-colors"
                 />
               </div>
 
@@ -469,7 +501,7 @@ function VendorDashboard() {
                       <div className="flex justify-between items-start mb-4">
                         <div>
                           <div className="flex items-center gap-2 mb-2">
-                            <span className="px-2 py-1 bg-black/10 text-[#CEFF00] text-xs rounded-full">
+                            <span className="px-2 py-1 bg-gray-200 text-black text-xs rounded-full">
                               {post.category}
                             </span>
                             <span className="text-gray-600 text-xs">• Posted by {post.customer_name}</span>
@@ -479,7 +511,7 @@ function VendorDashboard() {
                         </div>
                         <div className="text-right">
                           <p className="text-sm text-gray-600">Budget</p>
-                          <p className="text-xl font-bold text-[#CEFF00]">₹{post.budget}</p>
+                          <p className="text-xl font-bold text-indigo-600">₹{post.budget}</p>
                         </div>
                       </div>
 
@@ -490,8 +522,8 @@ function VendorDashboard() {
                               key={idx}
                               src={img}
                               alt={`Requirement ${idx + 1}`}
-                              className="w-20 h-20 object-cover rounded-lg bg-white border border-gray-200"
-                              onError={(e) => e.target.src = 'https://via.placeholder.com/80?text=Image'}
+                              className="w-24 h-24 object-cover rounded-lg bg-white border border-gray-200"
+                              onError={(e) => e.target.src = 'https://via.placeholder.com/96?text=Image'}
                             />
                           ))}
                         </div>
@@ -512,7 +544,7 @@ function VendorDashboard() {
                           disabled={hasQuoted(post.id)}
                           className={`px-6 py-2 rounded-lg font-semibold transition-all ${hasQuoted(post.id)
                             ? 'bg-white border border-gray-200 text-gray-600 cursor-not-allowed'
-                            : 'bg-black text-black hover:bg-black/90'
+                            : 'bg-black text-white hover:bg-gray-800'
                             }`}
                         >
                           {hasQuoted(post.id) ? 'Quoted' : 'Send Quote'}
@@ -546,7 +578,7 @@ function VendorDashboard() {
                             }`}>{quote.status.toUpperCase()}</span></p>
                         </div>
                         <div className="text-right">
-                          <p className="text-xl font-bold text-[#CEFF00]">₹{quote.price_total}</p>
+                          <p className="text-xl font-bold text-indigo-600">₹{quote.price_total}</p>
                           <p className="text-sm text-gray-600">{quote.delivery_days} days delivery</p>
                         </div>
                       </div>
@@ -573,7 +605,7 @@ function VendorDashboard() {
               {/* High Demand Categories */}
               <div className="glass-card p-6 rounded-2xl">
                 <h3 className="font-bold mb-4 flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5 text-[#CEFF00]" />
+                  <TrendingUp className="w-5 h-5 text-indigo-600" />
                   High Demand
                 </h3>
                 <div className="space-y-4">
@@ -585,7 +617,7 @@ function VendorDashboard() {
                         </span>
                         <span className="text-sm text-gray-700">{category}</span>
                       </div>
-                      <span className="text-xs text-[#CEFF00] font-bold">{count} requests</span>
+                      <span className="text-xs text-indigo-600 font-bold">{count} requests</span>
                     </div>
                   ))}
                 </div>
@@ -595,12 +627,12 @@ function VendorDashboard() {
               <div className="glass-card p-6 rounded-2xl">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-bold flex items-center gap-2">
-                    <ShoppingBag className="w-5 h-5 text-[#CEFF00]" />
+                    <ShoppingBag className="w-5 h-5 text-indigo-600" />
                     My Inventory
                   </h3>
                   <button
                     onClick={() => setIsInventoryModalOpen(true)}
-                    className="text-xs text-[#CEFF00] hover:underline"
+                    className="text-xs text-indigo-600 hover:underline"
                   >
                     Manage
                   </button>
@@ -743,7 +775,7 @@ function VendorDashboard() {
                   <select
                     name="category"
                     defaultValue={editingItem?.category || categories[0]}
-                    className="w-full bg-white border border-gray-200 border border-gray-200 rounded-lg px-3 py-2 text-gray-900 focus:border-[#CEFF00] outline-none"
+                    className="w-full bg-white border border-gray-200 border border-gray-200 rounded-lg px-3 py-2 text-gray-900 focus:border-indigo-600 outline-none"
                   >
                     {categories.map(cat => (
                       <option key={cat} value={cat} className="bg-white">{cat}</option>
@@ -760,7 +792,7 @@ function VendorDashboard() {
                   />
                   {editingItem?.images?.[0] && (
                     <p className="text-xs text-gray-600 mt-1">
-                      Current: <a href={editingItem.images[0]} target="_blank" rel="noreferrer" className="text-[#CEFF00] hover:underline">View Image</a>
+                      Current: <a href={editingItem.images[0]} target="_blank" rel="noreferrer" className="text-indigo-600 hover:underline">View Image</a>
                     </p>
                   )}
                 </div>

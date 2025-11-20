@@ -33,12 +33,13 @@ export default function ChatWindow({ isOpen, onClose, conversation, currentUserE
         // 1. Find the thread
         let tid = null;
 
-        // Try to find by quote_id first
+        // Try to find by quote_id first, but ensure user is a participant
         if (conversation.quote_id) {
           const { data: thread } = await supabase
             .from('chat_threads')
             .select('id')
             .eq('quote_id', conversation.quote_id)
+            .or(`customer_id.eq.${currentUserId},vendor_id.eq.${currentUserId}`)
             .single();
           if (thread) tid = thread.id;
         }
@@ -113,8 +114,8 @@ export default function ChatWindow({ isOpen, onClose, conversation, currentUserE
         // CustomerDashboard sets: quote_id, vendor_id, customer_id.
         // VendorDashboard sets: quote_id, vendor_id, customer_id (we need to ensure this).
 
-        if (!conversation.vendor_id || !conversation.customer_id) {
-          throw new Error("Missing participant info");
+        if (!conversation.vendor_id || !conversation.customer_id || !conversation.quote_id) {
+          throw new Error("Missing participant info or quote reference");
         }
 
         const { data: newThread, error: createError } = await supabase
