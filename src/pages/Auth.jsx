@@ -31,45 +31,51 @@ function Auth() {
     role: ""
   });
 
+  // AUTH DISABLED FOR TESTING ONLY
+  // useEffect(() => {
+  //   // Check if user is already logged in
+  //   const checkAuth = async () => {
+  //     // Only run once - prevent multiple checks
+  //     if (hasCheckedAuth.current) {
+  //       setIsAuthChecking(false);
+  //       return;
+  //     }
+  //
+  //     hasCheckedAuth.current = true;
+
+  //     try {
+  //       const { data: { session } } = await supabase.auth.getSession();
+
+  //       if (session) {
+  //         // Fetch user profile to get role
+  //         const { data: profile } = await supabase
+  //           .from('profiles')
+  //           .select('role')
+  //           .eq('id', session.user.id)
+  //           .single();
+
+  //         if (profile) {
+  //           // Redirect to appropriate dashboard with replace to prevent back button issues
+  //           if (profile.role === 'customer') {
+  //             navigate(createPageUrl('CustomerDashboard'), { replace: true });
+  //           } else {
+  //             navigate(createPageUrl('VendorDashboard'), { replace: true });
+  //           }
+  //         }
+  //       }
+  //     } catch (error) {
+  //       console.error('Auth check error:', error);
+  //     } finally {
+  //       setIsAuthChecking(false);
+  //     }
+  //   };
+  //   checkAuth();
+  // }, []); // Empty dependency - only run once on mount
+
+  // AUTH DISABLED: Set auth checking to false immediately
   useEffect(() => {
-    // Check if user is already logged in
-    const checkAuth = async () => {
-      // Only run once - prevent multiple checks
-      if (hasCheckedAuth.current) {
-        setIsAuthChecking(false);
-        return;
-      }
-
-      hasCheckedAuth.current = true;
-
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-
-        if (session) {
-          // Fetch user profile to get role
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('role')
-            .eq('id', session.user.id)
-            .single();
-
-          if (profile) {
-            // Redirect to appropriate dashboard with replace to prevent back button issues
-            if (profile.role === 'customer') {
-              navigate(createPageUrl('CustomerDashboard'), { replace: true });
-            } else {
-              navigate(createPageUrl('VendorDashboard'), { replace: true });
-            }
-          }
-        }
-      } catch (error) {
-        console.error('Auth check error:', error);
-      } finally {
-        setIsAuthChecking(false);
-      }
-    };
-    checkAuth();
-  }, []); // Empty dependency - only run once on mount
+    setIsAuthChecking(false);
+  }, []);
 
   const handleSignIn = async (e) => {
     e.preventDefault();
@@ -106,14 +112,14 @@ function Auth() {
       localStorage.setItem('userName', profile.display_name);
       localStorage.setItem('userRole', profile.role);
 
-      toast.success("Signed in successfully");
+      toast.success("Signed in successfully - Auth disabled for testing");
 
-      // Redirect to dashboard with replace to prevent back button issues
-      if (profile.role === 'customer') {
-        navigate(createPageUrl('CustomerDashboard'), { replace: true });
-      } else {
-        navigate(createPageUrl('VendorDashboard'), { replace: true });
-      }
+      // AUTH DISABLED FOR TESTING ONLY - No redirect
+      // if (profile.role === 'customer') {
+      //   navigate(createPageUrl('CustomerDashboard'), { replace: true });
+      // } else {
+      //   navigate(createPageUrl('VendorDashboard'), { replace: true });
+      // }
     } catch (err) {
       console.error("Sign in error:", err);
       setError(err.message || "An error occurred. Please try again.");
@@ -186,14 +192,14 @@ function Auth() {
         localStorage.setItem('userName', signUpData.name);
         localStorage.setItem('userRole', signUpData.role);
 
-        toast.success("Account created successfully");
+        toast.success("Account created successfully - Auth disabled for testing");
 
-        // Redirect to dashboard with replace to prevent back button issues
-        if (signUpData.role === 'customer') {
-          navigate(createPageUrl('CustomerDashboard'), { replace: true });
-        } else {
-          navigate(createPageUrl('VendorDashboard'), { replace: true });
-        }
+        // AUTH DISABLED FOR TESTING ONLY - No redirect
+        // if (signUpData.role === 'customer') {
+        //   navigate(createPageUrl('CustomerDashboard'), { replace: true });
+        // } else {
+        //   navigate(createPageUrl('VendorDashboard'), { replace: true });
+        // }
       }
     } catch (err) {
       console.error("Sign up error:", err);
