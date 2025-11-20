@@ -339,7 +339,7 @@ function VendorDashboard() {
 
   return (
     <ProtectedRoute requiredRole="vendor">
-      <div className="min-h-screen px-4 sm:px-6 lg:px-8 py-12">
+      <div className="min-h-screen bg-white px-4 sm:px-6 lg:px-8 py-12">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-12">

@@ -104,7 +104,7 @@ function Home() {
       </motion.nav>
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 pt-14">
+      <section className="relative min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 pt-14 bg-white">
         {/* Background Images */}
         <div className="fixed inset-0 pointer-events-none overflow-hidden opacity-10">
           <img
