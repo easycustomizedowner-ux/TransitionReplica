@@ -152,17 +152,17 @@ export default function PostRequirementModal({ isOpen, onClose, onSubmit }) { //
             <div key={s} className="flex items-center">
               <div
                 className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-sm sm:text-base font-semibold transition-colors ${s === step
-                  ? "bg-[#CEFF00] text-[#0D0D0D]"
+                  ? "bg-black text-white"
                   : s < step
-                    ? "bg-[#CEFF00]/30 text-white"
-                    : "bg-white/10 text-gray-400"
+                    ? "bg-black/30 text-gray-900"
+                    : "bg-white/10 text-gray-600"
                   }`}
               >
                 {s}
               </div>
               {s < 4 && (
                 <div
-                  className={`h-1 w-6 sm:w-12 mx-1 sm:mx-2 transition-colors ${s < step ? "bg-[#CEFF00]" : "bg-white/10"
+                  className={`h-1 w-6 sm:w-12 mx-1 sm:mx-2 transition-colors ${s < step ? "bg-black" : "bg-white/10"
                     }`}
                 />
               )}
@@ -192,15 +192,15 @@ export default function PostRequirementModal({ isOpen, onClose, onSubmit }) { //
                       setStep(2);
                     }}
                     className={`p-4 rounded-xl text-left transition-all ${formData.category === cat.name
-                      ? 'bg-[#CEFF00]/20 border-2 border-[#CEFF00]'
+                      ? 'bg-black/20 border-2 border-[#CEFF00]'
                       : 'glass-card hover:border-[#CEFF00]/50'
                       }`}
                   >
                     <div className="flex items-start gap-3">
                       <span className="text-2xl">{cat.icon}</span>
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-white mb-1 text-sm">{cat.name}</h4>
-                        <p className="text-xs text-gray-400 line-clamp-2">{cat.examples}</p>
+                        <h4 className="font-semibold text-gray-900 mb-1 text-sm">{cat.name}</h4>
+                        <p className="text-xs text-gray-600 line-clamp-2">{cat.examples}</p>
                       </div>
                     </div>
                   </motion.button>
@@ -220,23 +220,23 @@ export default function PostRequirementModal({ isOpen, onClose, onSubmit }) { //
             >
               <h3 className="text-lg sm:text-xl font-semibold mb-4">Describe Your Product</h3>
               <div>
-                <Label htmlFor="title" className="text-white mb-2 block">Product Title</Label>
+                <Label htmlFor="title" className="text-gray-900 mb-2 block">Product Title</Label>
                 <Input
                   id="title"
                   placeholder="e.g., Nike Air Jordan 1 High"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="bg-white/5 border-[#CEFF00]/20 text-white"
+                  className="bg-white border border-gray-200 border-gray-200 text-gray-900"
                 />
               </div>
               <div>
-                <Label htmlFor="description" className="text-white mb-2 block">Description</Label>
+                <Label htmlFor="description" className="text-gray-900 mb-2 block">Description</Label>
                 <Textarea
                   id="description"
                   placeholder="Describe the product in detail (brand, size, color, etc.)"
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="bg-white/5 border-[#CEFF00]/20 text-white min-h-32"
+                  className="bg-white border border-gray-200 border-gray-200 text-gray-900 min-h-32"
                 />
               </div>
             </motion.div>
@@ -252,14 +252,14 @@ export default function PostRequirementModal({ isOpen, onClose, onSubmit }) { //
             >
               <h3 className="text-lg sm:text-xl font-semibold mb-4">Set Your Budget</h3>
               <div>
-                <Label htmlFor="budget" className="text-white mb-2 block">Budget (₹)</Label>
+                <Label htmlFor="budget" className="text-gray-900 mb-2 block">Budget (₹)</Label>
                 <Input
                   id="budget"
                   type="number"
                   placeholder="Enter your budget in Rupees"
                   value={formData.budget}
                   onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
-                  className="bg-white/5 border-[#CEFF00]/20 text-white text-2xl"
+                  className="bg-white border border-gray-200 border-gray-200 text-gray-900 text-2xl"
                 />
               </div>
             </motion.div>
@@ -276,7 +276,7 @@ export default function PostRequirementModal({ isOpen, onClose, onSubmit }) { //
               <h3 className="text-lg sm:text-xl font-semibold mb-4">Upload Images (Optional)</h3>
               <div className="border-2 border-dashed border-[#CEFF00]/30 rounded-2xl p-8 text-center">
                 <Upload className="w-12 h-12 text-[#CEFF00] mx-auto mb-4" />
-                <p className="text-gray-400 mb-4">Upload product images or reference photos</p>
+                <p className="text-gray-600 mb-4">Upload product images or reference photos</p>
                 <input
                   type="file"
                   multiple
@@ -304,7 +304,7 @@ export default function PostRequirementModal({ isOpen, onClose, onSubmit }) { //
                           ...formData,
                           images: formData.images.filter((_, i) => i !== index)
                         })}
-                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="absolute top-1 right-1 bg-red-500 text-gray-900 rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                       >
                         ×
                       </button>

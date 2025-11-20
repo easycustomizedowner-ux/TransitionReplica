@@ -347,7 +347,7 @@ function VendorDashboard() {
               <h1 className="text-4xl font-bold mb-2">
                 Vendor Dashboard <span className="text-[#CEFF00]">.</span>
               </h1>
-              <p className="text-gray-400">Welcome back, {userName}</p>
+              <p className="text-gray-600">Welcome back, {userName}</p>
             </div>
             <div className="flex gap-4 mt-4 md:mt-0">
               <button
@@ -371,10 +371,10 @@ function VendorDashboard() {
             >
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <p className="text-gray-400 text-sm">Total Revenue</p>
+                  <p className="text-gray-600 text-sm">Total Revenue</p>
                   <h3 className="text-3xl font-bold mt-1">₹{totalRevenue.toLocaleString()}</h3>
                 </div>
-                <div className="p-3 bg-[#CEFF00]/10 rounded-xl">
+                <div className="p-3 bg-black/10 rounded-xl">
                   <DollarSign className="w-6 h-6 text-[#CEFF00]" />
                 </div>
               </div>
@@ -390,14 +390,14 @@ function VendorDashboard() {
             >
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <p className="text-gray-400 text-sm">Active Quotes</p>
+                  <p className="text-gray-600 text-sm">Active Quotes</p>
                   <h3 className="text-3xl font-bold mt-1">{activeQuotes}</h3>
                 </div>
                 <div className="p-3 bg-blue-500/10 rounded-xl">
                   <MessageCircle className="w-6 h-6 text-blue-500" />
                 </div>
               </div>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-gray-600">
                 {myQuotes.length} total quotes submitted
               </p>
             </motion.div>
@@ -408,14 +408,14 @@ function VendorDashboard() {
             >
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <p className="text-gray-400 text-sm">Inventory Items</p>
+                  <p className="text-gray-600 text-sm">Inventory Items</p>
                   <h3 className="text-3xl font-bold mt-1">{myInventory.length}</h3>
                 </div>
                 <div className="p-3 bg-purple-500/10 rounded-xl">
                   <Package className="w-6 h-6 text-purple-500" />
                 </div>
               </div>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-gray-600">
                 {myInventory.filter(i => i.stock < 5).length} low stock items
               </p>
             </motion.div>
@@ -430,11 +430,11 @@ function VendorDashboard() {
                   <select
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm focus:border-[#CEFF00] outline-none"
+                    className="bg-white border border-gray-200 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:border-[#CEFF00] outline-none"
                   >
-                    <option value="all" className="bg-[#1A1A1A]">All Categories</option>
+                    <option value="all" className="bg-white">All Categories</option>
                     {categories.map(cat => (
-                      <option key={cat} value={cat} className="bg-[#1A1A1A]">{cat}</option>
+                      <option key={cat} value={cat} className="bg-white">{cat}</option>
                     ))}
                   </select>
                 </div>
@@ -442,43 +442,43 @@ function VendorDashboard() {
 
               {/* Search */}
               <div className="relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-600" />
                 <input
                   type="text"
                   placeholder="Search requirements..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-12 pr-4 focus:border-[#CEFF00] outline-none transition-colors"
+                  className="w-full bg-white border border-gray-200 border border-gray-200 rounded-xl py-3 pl-12 pr-4 focus:border-[#CEFF00] outline-none transition-colors"
                 />
               </div>
 
               {/* Feed Items */}
               <div className="space-y-4">
                 {postsLoading ? (
-                  <div className="text-center py-12 text-gray-400">Loading opportunities...</div>
+                  <div className="text-center py-12 text-gray-600">Loading opportunities...</div>
                 ) : filteredPosts.length === 0 ? (
-                  <div className="text-center py-12 text-gray-400">No requirements found matching your criteria</div>
+                  <div className="text-center py-12 text-gray-600">No requirements found matching your criteria</div>
                 ) : (
                   filteredPosts.map((post) => (
                     <motion.div
                       key={post.id}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="glass-card p-6 rounded-2xl hover:border-[#CEFF00]/30 transition-all"
+                      className="glass-card p-6 rounded-2xl hover:border-black/30 transition-all"
                     >
                       <div className="flex justify-between items-start mb-4">
                         <div>
                           <div className="flex items-center gap-2 mb-2">
-                            <span className="px-2 py-1 bg-[#CEFF00]/10 text-[#CEFF00] text-xs rounded-full">
+                            <span className="px-2 py-1 bg-black/10 text-[#CEFF00] text-xs rounded-full">
                               {post.category}
                             </span>
-                            <span className="text-gray-400 text-xs">• Posted by {post.customer_name}</span>
+                            <span className="text-gray-600 text-xs">• Posted by {post.customer_name}</span>
                           </div>
                           <h3 className="text-xl font-bold mb-2">{post.title}</h3>
-                          <p className="text-gray-400 text-sm line-clamp-2">{post.description}</p>
+                          <p className="text-gray-600 text-sm line-clamp-2">{post.description}</p>
                         </div>
                         <div className="text-right">
-                          <p className="text-sm text-gray-400">Budget</p>
+                          <p className="text-sm text-gray-600">Budget</p>
                           <p className="text-xl font-bold text-[#CEFF00]">₹{post.budget}</p>
                         </div>
                       </div>
@@ -490,15 +490,15 @@ function VendorDashboard() {
                               key={idx}
                               src={img}
                               alt={`Requirement ${idx + 1}`}
-                              className="w-20 h-20 object-cover rounded-lg bg-white/5"
+                              className="w-20 h-20 object-cover rounded-lg bg-white border border-gray-200"
                               onError={(e) => e.target.src = 'https://via.placeholder.com/80?text=Image'}
                             />
                           ))}
                         </div>
                       )}
 
-                      <div className="flex items-center justify-between pt-4 border-t border-white/10">
-                        <div className="flex items-center gap-4 text-sm text-gray-400">
+                      <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+                        <div className="flex items-center gap-4 text-sm text-gray-600">
                           <span>{new Date(post.created_at).toLocaleDateString()}</span>
                           {hasQuoted(post.id) && (
                             <span className="flex items-center text-green-400">
@@ -511,8 +511,8 @@ function VendorDashboard() {
                           onClick={() => setSelectedPost(post)}
                           disabled={hasQuoted(post.id)}
                           className={`px-6 py-2 rounded-lg font-semibold transition-all ${hasQuoted(post.id)
-                            ? 'bg-white/5 text-gray-400 cursor-not-allowed'
-                            : 'bg-[#CEFF00] text-black hover:bg-[#CEFF00]/90'
+                            ? 'bg-white border border-gray-200 text-gray-600 cursor-not-allowed'
+                            : 'bg-black text-black hover:bg-black/90'
                             }`}
                         >
                           {hasQuoted(post.id) ? 'Quoted' : 'Send Quote'}
@@ -527,7 +527,7 @@ function VendorDashboard() {
               <h2 className="text-2xl font-bold">My Active Quotes</h2>
               <div className="space-y-4">
                 {myQuotes.length === 0 ? (
-                  <div className="text-center py-12 text-gray-400 glass-card rounded-2xl">
+                  <div className="text-center py-12 text-gray-600 glass-card rounded-2xl">
                     No active quotes. Start sending quotes to requests in the Market Feed!
                   </div>
                 ) : (
@@ -536,27 +536,27 @@ function VendorDashboard() {
                       key={quote.id}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="glass-card p-6 rounded-2xl hover:border-[#CEFF00]/30 transition-all"
+                      className="glass-card p-6 rounded-2xl hover:border-black/30 transition-all"
                     >
                       <div className="flex justify-between items-start mb-4">
                         <div>
                           <h3 className="text-lg font-bold mb-1">Quote for Request #{quote.ad_id.slice(0, 8)}...</h3>
-                          <p className="text-sm text-gray-400">Status: <span className={`font-semibold ${quote.status === 'accepted' ? 'text-green-400' :
+                          <p className="text-sm text-gray-600">Status: <span className={`font-semibold ${quote.status === 'accepted' ? 'text-green-400' :
                             quote.status === 'rejected' ? 'text-red-400' : 'text-yellow-400'
                             }`}>{quote.status.toUpperCase()}</span></p>
                         </div>
                         <div className="text-right">
                           <p className="text-xl font-bold text-[#CEFF00]">₹{quote.price_total}</p>
-                          <p className="text-sm text-gray-400">{quote.delivery_days} days delivery</p>
+                          <p className="text-sm text-gray-600">{quote.delivery_days} days delivery</p>
                         </div>
                       </div>
-                      <p className="text-gray-300 text-sm mb-4 bg-white/5 p-3 rounded-lg">
+                      <p className="text-gray-700 text-sm mb-4 bg-white border border-gray-200 p-3 rounded-lg">
                         "{quote.message}"
                       </p>
                       <div className="flex justify-end gap-3">
                         <button
                           onClick={() => handleOpenChat(quote)}
-                          className="px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg font-semibold flex items-center gap-2 transition-colors"
+                          className="px-4 py-2 bg-white border border-gray-200 hover:bg-gray-100 rounded-lg font-semibold flex items-center gap-2 transition-colors"
                         >
                           <MessageCircle className="w-4 h-4" />
                           Chat with Customer
@@ -580,10 +580,10 @@ function VendorDashboard() {
                   {topCategories.map(([category, count], idx) => (
                     <div key={category} className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <span className="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center text-xs font-bold">
+                        <span className="w-6 h-6 rounded-full bg-white border border-gray-200 flex items-center justify-center text-xs font-bold">
                           {idx + 1}
                         </span>
-                        <span className="text-sm text-gray-300">{category}</span>
+                        <span className="text-sm text-gray-700">{category}</span>
                       </div>
                       <span className="text-xs text-[#CEFF00] font-bold">{count} requests</span>
                     </div>
@@ -607,20 +607,20 @@ function VendorDashboard() {
                 </div>
                 <div className="space-y-3">
                   {myInventory.slice(0, 3).map(item => (
-                    <div key={item.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 transition-colors group">
+                    <div key={item.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-white border border-gray-200 transition-colors group">
                       <img
                         src={item.images?.[0] || 'https://via.placeholder.com/40?text=Prod'}
                         alt={item.product_name}
-                        className="w-10 h-10 rounded-md object-cover bg-white/5"
+                        className="w-10 h-10 rounded-md object-cover bg-white border border-gray-200"
                       />
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium truncate">{item.product_name}</p>
-                        <p className="text-xs text-gray-400">Stock: {item.stock}</p>
+                        <p className="text-xs text-gray-600">Stock: {item.stock}</p>
                       </div>
                       <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button
                           onClick={() => handleEditItem(item)}
-                          className="p-1 hover:text-[#CEFF00]"
+                          className="p-1 hover:text-black"
                         >
                           <Edit className="w-4 h-4" />
                         </button>
@@ -634,7 +634,7 @@ function VendorDashboard() {
                     </div>
                   ))}
                   {myInventory.length === 0 && (
-                    <p className="text-sm text-gray-400 text-center py-4">No items in inventory</p>
+                    <p className="text-sm text-gray-600 text-center py-4">No items in inventory</p>
                   )}
                 </div>
               </div>
@@ -643,40 +643,40 @@ function VendorDashboard() {
 
           {/* Quote Modal */}
           <Dialog open={!!selectedPost} onOpenChange={() => setSelectedPost(null)}>
-            <DialogContent className="bg-[#1A1A1A] border-[#CEFF00]/20 text-white">
+            <DialogContent className="bg-white border-gray-200 text-gray-900">
               <DialogHeader>
                 <DialogTitle>Submit Quote for "{selectedPost?.title}"</DialogTitle>
               </DialogHeader>
               <form onSubmit={handleQuoteSubmit} className="space-y-4 mt-4">
                 <div>
-                  <label className="text-sm text-gray-400 mb-1 block">Your Price (₹)</label>
+                  <label className="text-sm text-gray-600 mb-1 block">Your Price (₹)</label>
                   <Input
                     type="number"
                     required
                     value={quoteForm.price}
                     onChange={e => setQuoteForm({ ...quoteForm, price: e.target.value })}
-                    className="bg-white/5 border-white/10"
+                    className="bg-white border border-gray-200 border-gray-200"
                     placeholder="0.00"
                   />
                 </div>
                 <div>
-                  <label className="text-sm text-gray-400 mb-1 block">Delivery Time (Days)</label>
+                  <label className="text-sm text-gray-600 mb-1 block">Delivery Time (Days)</label>
                   <Input
                     type="number"
                     required
                     value={quoteForm.delivery_days}
                     onChange={e => setQuoteForm({ ...quoteForm, delivery_days: e.target.value })}
-                    className="bg-white/5 border-white/10"
+                    className="bg-white border border-gray-200 border-gray-200"
                     placeholder="e.g. 7"
                   />
                 </div>
                 <div>
-                  <label className="text-sm text-gray-400 mb-1 block">Message to Customer</label>
+                  <label className="text-sm text-gray-600 mb-1 block">Message to Customer</label>
                   <Textarea
                     required
                     value={quoteForm.message}
                     onChange={e => setQuoteForm({ ...quoteForm, message: e.target.value })}
-                    className="bg-white/5 border-white/10 h-32"
+                    className="bg-white border border-gray-200 border-gray-200 h-32"
                     placeholder="Describe your offer..."
                   />
                 </div>
@@ -693,73 +693,73 @@ function VendorDashboard() {
 
           {/* Inventory Modal */}
           <Dialog open={isInventoryModalOpen} onOpenChange={setIsInventoryModalOpen}>
-            <DialogContent className="bg-[#1A1A1A] border-[#CEFF00]/20 text-white">
+            <DialogContent className="bg-white border-gray-200 text-gray-900">
               <DialogHeader>
                 <DialogTitle>{editingItem ? 'Edit Item' : 'Add New Item'}</DialogTitle>
               </DialogHeader>
               <form onSubmit={handleInventorySubmit} className="space-y-4 mt-4">
                 <div>
-                  <label className="text-sm text-gray-400 mb-1 block">Product Name</label>
+                  <label className="text-sm text-gray-600 mb-1 block">Product Name</label>
                   <Input
                     name="product_name"
                     defaultValue={editingItem?.product_name}
                     required
-                    className="bg-white/5 border-white/10"
+                    className="bg-white border border-gray-200 border-gray-200"
                   />
                 </div>
                 <div>
-                  <label className="text-sm text-gray-400 mb-1 block">Description</label>
+                  <label className="text-sm text-gray-600 mb-1 block">Description</label>
                   <Textarea
                     name="description"
                     defaultValue={editingItem?.description}
                     required
-                    className="bg-white/5 border-white/10"
+                    className="bg-white border border-gray-200 border-gray-200"
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm text-gray-400 mb-1 block">Price (₹)</label>
+                    <label className="text-sm text-gray-600 mb-1 block">Price (₹)</label>
                     <Input
                       name="price"
                       type="number"
                       defaultValue={editingItem?.price}
                       required
-                      className="bg-white/5 border-white/10"
+                      className="bg-white border border-gray-200 border-gray-200"
                     />
                   </div>
                   <div>
-                    <label className="text-sm text-gray-400 mb-1 block">Stock</label>
+                    <label className="text-sm text-gray-600 mb-1 block">Stock</label>
                     <Input
                       name="stock"
                       type="number"
                       defaultValue={editingItem?.stock}
                       required
-                      className="bg-white/5 border-white/10"
+                      className="bg-white border border-gray-200 border-gray-200"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="text-sm text-gray-400 mb-1 block">Category</label>
+                  <label className="text-sm text-gray-600 mb-1 block">Category</label>
                   <select
                     name="category"
                     defaultValue={editingItem?.category || categories[0]}
-                    className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-[#CEFF00] outline-none"
+                    className="w-full bg-white border border-gray-200 border border-gray-200 rounded-lg px-3 py-2 text-gray-900 focus:border-[#CEFF00] outline-none"
                   >
                     {categories.map(cat => (
-                      <option key={cat} value={cat} className="bg-[#1A1A1A]">{cat}</option>
+                      <option key={cat} value={cat} className="bg-white">{cat}</option>
                     ))}
                   </select>
                 </div>
                 <div>
-                  <label className="text-sm text-gray-400 mb-1 block">Product Image</label>
+                  <label className="text-sm text-gray-600 mb-1 block">Product Image</label>
                   <Input
                     type="file"
                     name="image"
                     accept="image/*"
-                    className="bg-white/5 border-white/10 cursor-pointer"
+                    className="bg-white border border-gray-200 border-gray-200 cursor-pointer"
                   />
                   {editingItem?.images?.[0] && (
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-gray-600 mt-1">
                       Current: <a href={editingItem.images[0]} target="_blank" rel="noreferrer" className="text-[#CEFF00] hover:underline">View Image</a>
                     </p>
                   )}

@@ -88,51 +88,51 @@ export default function VendorInventoryForm({ isOpen, onClose, item, onSubmit })
         <div className="space-y-5">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <Label className="text-white mb-2 block">Product Name *</Label>
+              <Label className="text-gray-900 mb-2 block">Product Name *</Label>
               <Input
                 placeholder="e.g., Custom T-Shirt"
                 value={formData.product_name}
                 onChange={(e) => setFormData({ ...formData, product_name: e.target.value })}
-                className="bg-white/5 border-[#CEFF00]/20 text-white"
+                className="bg-white border border-gray-200 border-gray-200 text-gray-900"
               />
             </div>
 
             <div>
-              <Label className="text-white mb-2 block">Price (₹) *</Label>
+              <Label className="text-gray-900 mb-2 block">Price (₹) *</Label>
               <Input
                 type="number"
                 placeholder="0"
                 value={formData.price}
                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                className="bg-white/5 border-[#CEFF00]/20 text-white"
+                className="bg-white border border-gray-200 border-gray-200 text-gray-900"
               />
             </div>
           </div>
 
           <div>
-            <Label className="text-white mb-2 block">Description *</Label>
+            <Label className="text-gray-900 mb-2 block">Description *</Label>
             <Textarea
               placeholder="Describe your product..."
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="bg-white/5 border-[#CEFF00]/20 text-white min-h-24"
+              className="bg-white border border-gray-200 border-gray-200 text-gray-900 min-h-24"
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <Label className="text-white mb-2 block">Stock Quantity *</Label>
+              <Label className="text-gray-900 mb-2 block">Stock Quantity *</Label>
               <Input
                 type="number"
                 placeholder="0"
                 value={formData.stock}
                 onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
-                className="bg-white/5 border-[#CEFF00]/20 text-white"
+                className="bg-white border border-gray-200 border-gray-200 text-gray-900"
               />
             </div>
 
             <div>
-              <Label className="text-white mb-2 block flex items-center gap-2">
+              <Label className="text-gray-900 mb-2 block flex items-center gap-2">
                 <span>Featured Item</span>
                 <Star className="w-4 h-4 text-[#CEFF00]" />
               </Label>
@@ -140,18 +140,18 @@ export default function VendorInventoryForm({ isOpen, onClose, item, onSubmit })
                 type="button"
                 onClick={() => setFormData({ ...formData, is_featured: !formData.is_featured })}
                 className={`w-full h-10 rounded-lg flex items-center justify-center gap-2 transition-all ${formData.is_featured
-                  ? 'bg-[#CEFF00]/20 border-2 border-[#CEFF00]'
-                  : 'bg-white/5 border border-[#CEFF00]/20'
+                  ? 'bg-black/20 border-2 border-[#CEFF00]'
+                  : 'bg-white border border-gray-200 border border-gray-200'
                   }`}
               >
-                <Star className={`w-4 h-4 ${formData.is_featured ? 'fill-[#CEFF00] text-[#CEFF00]' : 'text-gray-400'}`} />
-                <span className="text-white">{formData.is_featured ? 'Featured' : 'Not Featured'}</span>
+                <Star className={`w-4 h-4 ${formData.is_featured ? 'fill-[#CEFF00] text-[#CEFF00]' : 'text-gray-600'}`} />
+                <span className="text-gray-900">{formData.is_featured ? 'Featured' : 'Not Featured'}</span>
               </button>
             </div>
           </div>
 
           <div>
-            <Label className="text-white mb-2 block">Category *</Label>
+            <Label className="text-gray-900 mb-2 block">Category *</Label>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-[200px] overflow-y-auto pr-2">
               {categories.map((cat) => (
                 <button
@@ -159,19 +159,19 @@ export default function VendorInventoryForm({ isOpen, onClose, item, onSubmit })
                   type="button"
                   onClick={() => setFormData({ ...formData, category: cat.name })}
                   className={`p-3 rounded-lg text-left text-xs transition-all ${formData.category === cat.name
-                    ? 'bg-[#CEFF00]/20 border-2 border-[#CEFF00]'
+                    ? 'bg-black/20 border-2 border-[#CEFF00]'
                     : 'glass-card hover:border-[#CEFF00]/50'
                     }`}
                 >
                   <span className="text-lg mr-1">{cat.icon}</span>
-                  <span className="text-white font-semibold">{cat.name}</span>
+                  <span className="text-gray-900 font-semibold">{cat.name}</span>
                 </button>
               ))}
             </div>
           </div>
 
           <div>
-            <Label className="text-white mb-2 block">Product Images</Label>
+            <Label className="text-gray-900 mb-2 block">Product Images</Label>
             <div className="border-2 border-dashed border-[#CEFF00]/30 rounded-xl p-6 text-center">
               <Upload className="w-10 h-10 text-[#CEFF00] mx-auto mb-3" />
               <input
@@ -214,7 +214,7 @@ export default function VendorInventoryForm({ isOpen, onClose, item, onSubmit })
                         ...formData,
                         images: formData.images.filter((_, i) => i !== index)
                       })}
-                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute top-1 right-1 bg-red-500 text-gray-900 rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:bg-gray-1000 transition-opacity"
                     >
                       <X className="w-4 h-4" />
                     </button>

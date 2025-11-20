@@ -330,7 +330,7 @@ function CustomerDashboard() {
               <h1 className="text-4xl font-bold mb-2">
                 Welcome, <span className="neon-text">{userName}</span>
               </h1>
-              <p className="text-gray-400">Manage your product requests and quotes</p>
+              <p className="text-gray-600">Manage your product requests and quotes</p>
             </div>
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -348,7 +348,7 @@ function CustomerDashboard() {
             <div className="glass-card p-6 rounded-2xl">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-400 text-sm mb-1">Total Requests</p>
+                  <p className="text-gray-600 text-sm mb-1">Total Requests</p>
                   <p className="text-3xl font-bold">{posts.length}</p>
                 </div>
                 <Package className="w-12 h-12 text-[#CEFF00]" />
@@ -357,7 +357,7 @@ function CustomerDashboard() {
             <div className="glass-card p-6 rounded-2xl">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-400 text-sm mb-1">Total Quotes</p>
+                  <p className="text-gray-600 text-sm mb-1">Total Quotes</p>
                   <p className="text-3xl font-bold">{allQuotes.length}</p>
                 </div>
                 <Eye className="w-12 h-12 text-[#CEFF00]" />
@@ -366,7 +366,7 @@ function CustomerDashboard() {
             <div className="glass-card p-6 rounded-2xl">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-400 text-sm mb-1">Active Chats</p>
+                  <p className="text-gray-600 text-sm mb-1">Active Chats</p>
                   <p className="text-3xl font-bold">
                     {new Set(allQuotes.map(q => q.vendor_email)).size}
                   </p>
@@ -384,7 +384,7 @@ function CustomerDashboard() {
                   <ShoppingBag className="w-8 h-8 text-[#CEFF00]" />
                   Browse Vendor Inventory
                 </h2>
-                <p className="text-gray-400">Discover pre-listed items from vendors</p>
+                <p className="text-gray-600">Discover pre-listed items from vendors</p>
               </div>
             </div>
 
@@ -392,23 +392,23 @@ function CustomerDashboard() {
             <div className="glass-card p-4 rounded-2xl mb-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-600" />
                   <Input
                     placeholder="Search products..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="bg-white/5 border-[#CEFF00]/20 text-white pl-11"
+                    className="bg-white border border-gray-200 border-gray-200 text-gray-900 pl-11"
                   />
                 </div>
 
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="w-full h-10 bg-white/5 border border-[#CEFF00]/20 text-white rounded-lg px-4 focus:border-[#CEFF00] focus:outline-none"
+                  className="w-full h-10 bg-white border border-gray-200 border border-gray-200 text-gray-900 rounded-lg px-4 focus:border-[#CEFF00] focus:outline-none"
                 >
-                  <option value="all" className="bg-[#1A1A1A]">All Categories</option>
+                  <option value="all" className="bg-white">All Categories</option>
                   {categories.map(cat => (
-                    <option key={cat} value={cat} className="bg-[#1A1A1A]">{cat}</option>
+                    <option key={cat} value={cat} className="bg-white">{cat}</option>
                   ))}
                 </select>
               </div>
@@ -421,8 +421,8 @@ function CustomerDashboard() {
               </div>
             ) : filteredInventory.length === 0 ? (
               <div className="glass-card p-12 rounded-2xl text-center">
-                <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-400 text-lg">
+                <Package className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+                <p className="text-gray-600 text-lg">
                   {searchQuery || selectedCategory !== 'all'
                     ? 'No items match your search'
                     : 'No items available yet'}
@@ -437,9 +437,9 @@ function CustomerDashboard() {
                     animate={{ opacity: 1, y: 0 }}
                     whileHover={{ scale: 1.03 }}
                     onClick={() => handleItemClick(item)}
-                    className="glass-card rounded-2xl overflow-hidden hover:border-[#CEFF00] transition-all cursor-pointer group"
+                    className="glass-card rounded-2xl overflow-hidden hover:border-black transition-all cursor-pointer group"
                   >
-                    <div className="relative h-40 bg-black/20">
+                    <div className="relative h-40 bg-gray-200">
                       {item.images && item.images.length > 0 ? (
                         <img
                           src={item.images[0]}
@@ -453,8 +453,8 @@ function CustomerDashboard() {
                         </div>
                       )}
                       {item.is_featured && (
-                        <div className="absolute top-2 left-2 bg-[#CEFF00] text-[#0D0D0D] px-2 py-1 rounded-lg flex items-center gap-1 text-xs font-semibold">
-                          <Star className="w-3 h-3 fill-[#0D0D0D]" />
+                        <div className="absolute top-2 left-2 bg-black text-white px-2 py-1 rounded-lg flex items-center gap-1 text-xs font-semibold">
+                          <Star className="w-3 h-3 fillbg-gray-50" />
                         </div>
                       )}
                       {item.stock === 0 && (
@@ -465,13 +465,13 @@ function CustomerDashboard() {
                     </div>
 
                     <div className="p-4">
-                      <h3 className="font-semibold line-clamp-1 group-hover:text-[#CEFF00] transition-colors mb-1">
+                      <h3 className="font-semibold line-clamp-1 group-hover:text-black transition-colors mb-1">
                         {item.product_name}
                       </h3>
-                      <p className="text-xs text-gray-400 mb-2">{item.category}</p>
+                      <p className="text-xs text-gray-600 mb-2">{item.category}</p>
                       <div className="flex items-center justify-between">
                         <p className="text-xl font-bold text-[#CEFF00]">₹{item.price}</p>
-                        <p className="text-xs text-gray-400">by {item.vendor_name}</p>
+                        <p className="text-xs text-gray-600">by {item.vendor_name}</p>
                       </div>
                     </div>
                   </motion.div>
@@ -489,8 +489,8 @@ function CustomerDashboard() {
               </div>
             ) : posts.length === 0 ? (
               <div className="glass-card p-12 rounded-2xl text-center">
-                <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-400 text-lg mb-4">You haven't posted any requests yet</p>
+                <Package className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+                <p className="text-gray-600 text-lg mb-4">You haven't posted any requests yet</p>
                 <button
                   onClick={() => setIsPostModalOpen(true)}
                   className="glow-button px-6 py-3 rounded-xl font-semibold"
@@ -507,16 +507,16 @@ function CustomerDashboard() {
                       key={post.id}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="glass-card p-6 rounded-2xl hover:border-[#CEFF00]/50 transition-all"
+                      className="glass-card p-6 rounded-2xl hover:border-black/50 transition-all"
                     >
                       <div className="mb-4">
                         <div className="flex items-start justify-between mb-2">
                           <h3 className="text-lg font-semibold line-clamp-2 flex-1 pr-2">{post.title}</h3>
-                          <span className="px-2 py-1 bg-[#CEFF00]/20 text-[#CEFF00] text-xs rounded-full flex-shrink-0">
+                          <span className="px-2 py-1 bg-gray-200 text-[#CEFF00] text-xs rounded-full flex-shrink-0">
                             {post.category}
                           </span>
                         </div>
-                        <p className="text-gray-400 text-sm line-clamp-2 mb-3">{post.description}</p>
+                        <p className="text-gray-600 text-sm line-clamp-2 mb-3">{post.description}</p>
                         {post.images && post.images.length > 0 && (
                           <div className="flex gap-2 mb-3 overflow-x-auto">
                             {post.images.slice(0, 3).map((img, idx) => (
@@ -529,7 +529,7 @@ function CustomerDashboard() {
                               />
                             ))}
                             {post.images.length > 3 && (
-                              <div className="w-16 h-16 bg-white/5 rounded-lg flex items-center justify-center text-xs text-gray-400">
+                              <div className="w-16 h-16 bg-white border border-gray-200 rounded-lg flex items-center justify-center text-xs text-gray-600">
                                 +{post.images.length - 3}
                               </div>
                             )}
@@ -538,7 +538,7 @@ function CustomerDashboard() {
                       </div>
                       <div className="flex items-center justify-between mb-4">
                         <span className="text-2xl font-bold text-[#CEFF00]">₹{post.budget}</span>
-                        <span className="text-sm text-gray-400">{quotesCount} quotes</span>
+                        <span className="text-sm text-gray-600">{quotesCount} quotes</span>
                       </div>
                       <div className="grid grid-cols-2 gap-2 mb-2">
                         <button
@@ -558,7 +558,7 @@ function CustomerDashboard() {
                       </div>
                       <button
                         onClick={() => handleViewQuotes(post)}
-                        className="w-full py-2 bg-[#CEFF00]/10 border border-[#CEFF00]/30 rounded-lg font-semibold hover:bg-[#CEFF00]/20 transition-colors flex items-center justify-center space-x-2"
+                        className="w-full py-2 bg-black/10 border border-[#CEFF00]/30 rounded-lg font-semibold hover:bg-gray-200 transition-colors flex items-center justify-center space-x-2"
                       >
                         <Eye className="w-4 h-4" />
                         <span>View Quotes</span>
@@ -598,13 +598,13 @@ function CustomerDashboard() {
                   className="glass-card rounded-2xl p-6 max-w-md w-full"
                 >
                   <h3 className="text-xl font-bold mb-4">Delete Requirement?</h3>
-                  <p className="text-gray-400 mb-6">
+                  <p className="text-gray-600 mb-6">
                     Are you sure you want to delete "{deleteConfirm.title}"? This action cannot be undone.
                   </p>
                   <div className="flex gap-3">
                     <button
                       onClick={() => setDeleteConfirm(null)}
-                      className="flex-1 py-2 glass-card rounded-lg font-semibold hover:border-[#CEFF00]/50 transition-colors"
+                      className="flex-1 py-2 glass-card rounded-lg font-semibold hover:border-black/50 transition-colors"
                     >
                       Cancel
                     </button>
@@ -622,7 +622,7 @@ function CustomerDashboard() {
 
           {/* Quotes Dialog */}
           <Dialog open={!!selectedPost} onOpenChange={() => setSelectedPost(null)}>
-            <DialogContent className="bg-[#1A1A1A] border-[#CEFF00]/20 max-w-3xl text-white">
+            <DialogContent className="bg-white border-gray-200 max-w-3xl text-gray-900">
               <DialogHeader>
                 <DialogTitle className="text-2xl font-bold">
                   Quotes for "{selectedPost?.title}"
@@ -630,28 +630,28 @@ function CustomerDashboard() {
               </DialogHeader>
               <div className="space-y-4 max-h-96 overflow-y-auto">
                 {postQuotes.length === 0 ? (
-                  <p className="text-gray-400 text-center py-8">No quotes yet</p>
+                  <p className="text-gray-600 text-center py-8">No quotes yet</p>
                 ) : (
                   postQuotes.map((quote) => (
                     <div key={quote.id} className="glass-card p-6 rounded-2xl">
                       <div className="flex items-start justify-between mb-4">
                         <div>
                           <h4 className="text-lg font-semibold">{quote.vendor_name}</h4>
-                          <p className="text-sm text-gray-400">{quote.vendor_email}</p>
+                          <p className="text-sm text-gray-600">{quote.vendor_email}</p>
                         </div>
                         <div className="text-right">
                           <p className="text-2xl font-bold text-[#CEFF00]">₹{quote.price_total}</p>
-                          <p className="text-sm text-gray-400">{quote.delivery_days} days</p>
+                          <p className="text-sm text-gray-600">{quote.delivery_days} days</p>
                         </div>
                       </div>
-                      <p className="text-gray-300 mb-4">{quote.message}</p>
+                      <p className="text-gray-700 mb-4">{quote.message}</p>
                       <div className="flex gap-3">
                         <button
                           onClick={() => {
                             setSelectedPost(null);
                             handleOpenChat(quote);
                           }}
-                          className="flex-1 py-2 bg-white/5 hover:bg-white/10 rounded-lg font-semibold flex items-center justify-center space-x-2 transition-colors"
+                          className="flex-1 py-2 bg-white border border-gray-200 hover:bg-gray-100 rounded-lg font-semibold flex items-center justify-center space-x-2 transition-colors"
                         >
                           <MessageCircle className="w-4 h-4" />
                           <span>Chat</span>

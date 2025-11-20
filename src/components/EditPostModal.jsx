@@ -124,29 +124,29 @@ export default function EditPostModal({ isOpen, onClose, post, onUpdate }) {
 
         <div className="space-y-5">
           <div>
-            <Label htmlFor="edit-title" className="text-white mb-2 block">Product Title</Label>
+            <Label htmlFor="edit-title" className="text-gray-900 mb-2 block">Product Title</Label>
             <Input
               id="edit-title"
               placeholder="e.g., Nike Air Jordan 1 High"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              className="bg-white/5 border-[#CEFF00]/20 text-white"
+              className="bg-white border border-gray-200 border-gray-200 text-gray-900"
             />
           </div>
 
           <div>
-            <Label htmlFor="edit-description" className="text-white mb-2 block">Description</Label>
+            <Label htmlFor="edit-description" className="text-gray-900 mb-2 block">Description</Label>
             <Textarea
               id="edit-description"
               placeholder="Describe the product in detail"
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="bg-white/5 border-[#CEFF00]/20 text-white min-h-32"
+              className="bg-white border border-gray-200 border-gray-200 text-gray-900 min-h-32"
             />
           </div>
 
           <div>
-            <Label className="text-white mb-2 block">Category</Label>
+            <Label className="text-gray-900 mb-2 block">Category</Label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[200px] overflow-y-auto pr-2">
               {categories.map((cat) => (
                 <button
@@ -154,31 +154,31 @@ export default function EditPostModal({ isOpen, onClose, post, onUpdate }) {
                   type="button"
                   onClick={() => setFormData({ ...formData, category: cat.name })}
                   className={`p-3 rounded-lg text-left text-sm transition-all ${formData.category === cat.name
-                    ? 'bg-[#CEFF00]/20 border-2 border-[#CEFF00]'
+                    ? 'bg-black/20 border-2 border-[#CEFF00]'
                     : 'glass-card hover:border-[#CEFF00]/50'
                     }`}
                 >
                   <span className="text-lg mr-2">{cat.icon}</span>
-                  <span className="text-white font-semibold text-xs">{cat.name}</span>
+                  <span className="text-gray-900 font-semibold text-xs">{cat.name}</span>
                 </button>
               ))}
             </div>
           </div>
 
           <div>
-            <Label htmlFor="edit-budget" className="text-white mb-2 block">Budget (₹)</Label>
+            <Label htmlFor="edit-budget" className="text-gray-900 mb-2 block">Budget (₹)</Label>
             <Input
               id="edit-budget"
               type="number"
               placeholder="Enter your budget in Rupees"
               value={formData.budget}
               onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
-              className="bg-white/5 border-[#CEFF00]/20 text-white text-xl"
+              className="bg-white border border-gray-200 border-gray-200 text-gray-900 text-xl"
             />
           </div>
 
           <div>
-            <Label className="text-white mb-2 block">Images</Label>
+            <Label className="text-gray-900 mb-2 block">Images</Label>
             <div className="border-2 border-dashed border-[#CEFF00]/30 rounded-xl p-6 text-center">
               <Upload className="w-10 h-10 text-[#CEFF00] mx-auto mb-3" />
               <input
@@ -220,7 +220,7 @@ export default function EditPostModal({ isOpen, onClose, post, onUpdate }) {
                         ...formData,
                         images: formData.images.filter((_, i) => i !== index)
                       })}
-                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute top-1 right-1 bg-red-500 text-gray-900 rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:bg-gray-1000 transition-opacity"
                     >
                       ×
                     </button>

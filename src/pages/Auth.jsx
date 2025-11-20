@@ -182,9 +182,9 @@ function Auth() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12 relative overflow-hidden">
+    <div className="min-h-screen bg-gray-50 text-gray-900 font-sans selection:bg-[#CEFF00] selection:text-black overflow-hidden flex items-center justify-center px-4 py-12 relative">
       {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0D0D0D] via-[#1A1A1A] to-[#0D0D0D]"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-100"></div>
 
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -199,7 +199,7 @@ function Auth() {
         className="relative z-10 w-full max-w-md"
       >
         {/* Back to Home button */}
-        <Link to={createPageUrl('Home')} className="inline-flex items-center space-x-2 text-gray-400 hover:text-[#CEFF00] transition-colors mb-8">
+        <Link to={createPageUrl('Home')} className="inline-flex items-center space-x-2 text-gray-600 hover:text-black transition-colors mb-8">
           <ArrowLeft className="w-5 h-5" />
           <span>Back to Home</span>
         </Link>
@@ -211,7 +211,7 @@ function Auth() {
               <span className="text-white">EASY</span>
               <span className="neon-text">CUSTOMIZED</span>
             </h1>
-            <p className="text-gray-400">
+            <p className="text-gray-600">
               {activeTab === "signin" ? "Welcome Back" : "Create Your Account"}
             </p>
             <p className="text-sm text-gray-500 mt-1">

@@ -157,7 +157,7 @@ export default function ChatWindow({ isOpen, onClose, conversation, currentUserE
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -165,16 +165,16 @@ export default function ChatWindow({ isOpen, onClose, conversation, currentUserE
           className="glass-card rounded-3xl w-full max-w-4xl h-[80vh] sm:h-[600px] flex flex-col"
         >
           {/* Header */}
-          <div className="flex items-center justify-between p-4 sm:p-6 border-b border-[#CEFF00]/20">
+          <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200">
             <div className="flex-1 min-w-0 pr-4">
               <h3 className="text-base sm:text-lg lg:text-xl font-bold truncate">
                 {conversation.otherUserName || 'Chat'}
               </h3>
-              <p className="text-xs sm:text-sm text-gray-400 truncate">
+              <p className="text-xs sm:text-sm text-gray-600 truncate">
                 {conversation.post_title || 'Conversation'}
               </p>
             </div>
-            <button onClick={onClose} className="text-gray-400 hover:text-white transition-colors flex-shrink-0">
+            <button onClick={onClose} className="text-gray-600 hover:text-gray-900 transition-colors flex-shrink-0">
               <X className="w-5 h-5 sm:w-6 sm:h-6" />
             </button>
           </div>
@@ -183,10 +183,10 @@ export default function ChatWindow({ isOpen, onClose, conversation, currentUserE
           <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3 sm:space-y-4">
             {isLoading ? (
               <div className="flex justify-center items-center h-full">
-                <Loader2 className="w-8 h-8 text-[#CEFF00] animate-spin" />
+                <Loader2 className="w-8 h-8 text-black animate-spin" />
               </div>
             ) : messages.length === 0 ? (
-              <div className="text-center text-gray-400 mt-12">
+              <div className="text-center text-gray-600 mt-12">
                 <p>No messages yet. Start the conversation!</p>
               </div>
             ) : (
@@ -199,18 +199,18 @@ export default function ChatWindow({ isOpen, onClose, conversation, currentUserE
                 >
                   <div className={`max-w-xs lg:max-w-md ${msg.sender_id === currentUserId ? 'order-2' : 'order-1'}`}>
                     <div className={`rounded-2xl p-4 ${msg.sender_id === currentUserId
-                        ? 'bg-[#CEFF00] text-[#0D0D0D]'
-                        : 'glass-card'
+                      ? 'bg-black text-white'
+                      : 'glass-card'
                       }`}>
                       <p>{msg.content}</p>
-                      <p className={`text-xs mt-2 ${msg.sender_id === currentUserId ? 'text-[#0D0D0D]/60' : 'text-gray-400'
+                      <p className={`text-xs mt-2 ${msg.sender_id === currentUserId ? 'text-white/60' : 'text-gray-600'
                         }`}>
                         {format(new Date(msg.created_at), 'p')}
                       </p>
                     </div>
                   </div>
                   <div className={`flex items-end mx-2 ${msg.sender_id === currentUserId ? 'order-1' : 'order-2'}`}>
-                    <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
                       <User className="w-4 h-4" />
                     </div>
                   </div>
@@ -221,14 +221,14 @@ export default function ChatWindow({ isOpen, onClose, conversation, currentUserE
           </div>
 
           {/* Input */}
-          <div className="p-4 sm:p-6 border-t border-[#CEFF00]/20">
+          <div className="p-4 sm:p-6 border-t border-gray-200">
             <div className="flex gap-2 sm:gap-3">
               <Input
                 placeholder="Type your message..."
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-                className="flex-1 bg-white/5 border-[#CEFF00]/20 text-white text-sm sm:text-base"
+                className="flex-1 bg-white border border-gray-200 text-gray-900 text-sm sm:text-base"
               />
               <button
                 onClick={handleSend}

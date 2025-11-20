@@ -78,7 +78,7 @@ function Home() {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5 }}
-        className="fixed top-16 left-0 right-0 z-40 glass-card border-b border-[#CEFF00]/20 backdrop-blur-xl"
+        className="fixed top-16 left-0 right-0 z-40 glass-card border-b border-gray-200 backdrop-blur-xl"
       >
         <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
           <div className="flex items-center justify-center space-x-3 sm:space-x-8 h-12 sm:h-14">
@@ -86,16 +86,16 @@ function Home() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => scrollToSection('how-it-works')}
-              className="text-xs sm:text-sm font-semibold text-gray-300 hover:text-[#CEFF00] transition-colors"
+              className="text-xs sm:text-sm font-semibold text-gray-600 hover:text-black transition-colors"
             >
               How It Works
             </motion.button>
-            <div className="w-px h-4 sm:h-6 bg-[#CEFF00]/20"></div>
+            <div className="w-px h-4 sm:h-6 bg-gray-300"></div>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => scrollToSection('categories')}
-              className="text-xs sm:text-sm font-semibold text-gray-300 hover:text-[#CEFF00] transition-colors"
+              className="text-xs sm:text-sm font-semibold text-gray-600 hover:text-black transition-colors"
             >
               Any Product, Anytime
             </motion.button>
@@ -165,12 +165,12 @@ function Home() {
           >
             {/* Logo/Brand Name */}
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-4 px-4 leading-tight">
-              <span className="text-white">EASY</span>
-              <span className="neon-text">CUSTOMIZED v2.0 (Test)</span>
+              <span className="text-black">EASY</span>
+              <span className="neon-text">CUSTOMIZED</span>
             </h1>
 
             {/* Tagline */}
-            <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl text-[#CEFF00] font-semibold mb-8 sm:mb-12 px-4">
+            <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl text-gray-700 font-semibold mb-8 sm:mb-12 px-4">
               Your Idea, Their Craft
             </p>
 
@@ -191,7 +191,7 @@ function Home() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => scrollToSection('why-choose')}
-                className="glass-card px-10 py-4 rounded-xl text-lg font-semibold border-[#CEFF00]/30 hover:border-[#CEFF00] transition-colors w-full sm:w-auto min-w-[200px]"
+                className="glass-card px-10 py-4 rounded-xl text-lg font-semibold border-gray-200 hover:border-black transition-colors w-full sm:w-auto min-w-[200px]"
               >
                 Learn More
               </motion.button>
@@ -204,7 +204,7 @@ function Home() {
               className="cursor-pointer"
               onClick={() => scrollToSection('why-choose')}
             >
-              <ChevronDown className="w-8 h-8 text-[#CEFF00] mx-auto" />
+              <ChevronDown className="w-8 h-8 text-black mx-auto" />
             </motion.div>
           </motion.div>
         </div>
@@ -232,13 +232,13 @@ function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="glass-card p-8 rounded-2xl hover:border-[#CEFF00]/50 transition-all duration-300 group"
+                className="glass-card p-8 rounded-2xl hover:border-black/20 transition-all duration-300 group"
               >
-                <div className="w-14 h-14 bg-[#CEFF00]/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-[#CEFF00]/20 transition-colors">
-                  <feature.icon className="w-7 h-7 text-[#CEFF00]" />
+                <div className="w-14 h-14 bg-gray-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-gray-200 transition-colors">
+                  <feature.icon className="w-7 h-7 text-black" />
                 </div>
                 <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
-                <p className="text-gray-400 leading-relaxed">{feature.description}</p>
+                <p className="text-gray-600 leading-relaxed">{feature.description}</p>
               </motion.div>
             ))}
           </div>
@@ -257,7 +257,7 @@ function Home() {
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 px-2">
               Any Product, <span className="neon-text">Anytime</span>
             </h2>
-            <p className="text-gray-400 text-lg sm:text-xl">Browse popular categories</p>
+            <p className="text-gray-600 text-lg sm:text-xl">Browse popular categories</p>
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -284,7 +284,7 @@ function Home() {
 
                 {/* Category Name */}
                 <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <h3 className="text-2xl font-bold text-white group-hover:text-[#CEFF00] transition-colors">
+                  <h3 className="text-2xl font-bold text-white group-hover:text-gray-200 transition-colors">
                     {category.name}
                   </h3>
                   <p className="text-sm text-gray-300 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -309,7 +309,7 @@ function Home() {
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 px-2">
               How It <span className="neon-text">Works</span>
             </h2>
-            <p className="text-gray-400 text-lg sm:text-xl">Get your product in 4 simple steps</p>
+            <p className="text-gray-600 text-lg sm:text-xl">Get your product in 4 simple steps</p>
           </motion.div>
 
           <div className="space-y-6">
@@ -329,16 +329,16 @@ function Home() {
                   scale: 1.02,
                   transition: { duration: 0.2 }
                 }}
-                className="glass-card p-4 sm:p-6 lg:p-8 rounded-2xl hover:border-[#CEFF00]/50 transition-all duration-300 flex items-start gap-3 sm:gap-4 lg:gap-6"
+                className="glass-card p-4 sm:p-6 lg:p-8 rounded-2xl hover:border-black/20 transition-all duration-300 flex items-start gap-3 sm:gap-4 lg:gap-6"
               >
                 <motion.div
-                  className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-[#CEFF00] rounded-full flex items-center justify-center text-[#0D0D0D] font-bold text-lg sm:text-xl"
+                  className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-black rounded-full flex items-center justify-center text-white font-bold text-lg sm:text-xl"
                   whileHover={{ rotate: 360 }}
                   transition={{ duration: 0.5 }}
                 >
                   {index + 1}
                 </motion.div>
-                <p className="text-sm sm:text-base lg:text-lg text-gray-300 flex-1 pt-1 sm:pt-2">{step}</p>
+                <p className="text-sm sm:text-base lg:text-lg text-gray-700 flex-1 pt-1 sm:pt-2">{step}</p>
               </motion.div>
             ))}
           </div>
@@ -357,7 +357,7 @@ function Home() {
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 px-2">
               Ready to Get <span className="neon-text">Started?</span>
             </h2>
-            <p className="text-base sm:text-lg lg:text-xl text-gray-400 mb-8 sm:mb-12 px-2">
+            <p className="text-base sm:text-lg lg:text-xl text-gray-600 mb-8 sm:mb-12 px-2">
               Join thousands finding and selling products through our reverse marketplace
             </p>
             <div className="flex justify-center">
