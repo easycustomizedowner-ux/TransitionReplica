@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Loader2 } from "lucide-react";
@@ -7,11 +7,7 @@ export default function ProtectedRoute({ children, requiredRole }) {
   const navigate = useNavigate();
   const [isChecking, setIsChecking] = useState(true);
 
-  useEffect(() => {
-    checkAuth();
-  }, []);
-
-  const checkAuth = () => {
+  const checkAuth = useCallback(() => {
     const isAuthenticated = localStorage.getItem('isAuthenticated');
     const userEmail = localStorage.getItem('userEmail');
     const userRole = localStorage.getItem('userRole');
@@ -19,14 +15,14 @@ export default function ProtectedRoute({ children, requiredRole }) {
 
     // Check if user is authenticated
     if (!isAuthenticated || isAuthenticated !== 'true') {
-      navigate(createPageUrl('Auth'));
+      navigate(createPageUrl('Auth'), { replace: true });
       return;
     }
 
     // Check if all required data exists
     if (!userEmail || !userRole || !userName) {
       localStorage.clear();
-      navigate(createPageUrl('Auth'));
+      navigate(createPageUrl('Auth'), { replace: true });
       return;
     }
 
@@ -34,15 +30,19 @@ export default function ProtectedRoute({ children, requiredRole }) {
     if (requiredRole && userRole !== requiredRole) {
       // Redirect to correct dashboard
       if (userRole === 'customer') {
-        navigate(createPageUrl('CustomerDashboard'));
+        navigate(createPageUrl('CustomerDashboard'), { replace: true });
       } else {
-        navigate(createPageUrl('VendorDashboard'));
+        navigate(createPageUrl('VendorDashboard'), { replace: true });
       }
       return;
     }
 
     setIsChecking(false);
-  };
+  }, [navigate, requiredRole]);
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
 
   if (isChecking) {
     return (

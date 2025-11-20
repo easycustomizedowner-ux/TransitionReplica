@@ -31,29 +31,27 @@ function CustomerDashboard() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [userLoading, setUserLoading] = useState(true);
-  const [userName, setUserName] = useState("User");
+  const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
     const getUser = async () => {
       try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-          setUserId(user.id);
-          setUserEmail(user.email);
-          // Get profile for name
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('display_name')
-            .eq('id', user.id)
-            .single();
-          if (profile) setUserName(profile.display_name);
+        // First try to get from localStorage (set by Auth.jsx)
+        const storedEmail = localStorage.getItem('userEmail');
+        const storedName = localStorage.getItem('userName');
+
+        // Then get session from Supabase
+        const { data: { session } } = await supabase.auth.getSession();
+
+        if (session?.user) {
+          setUserId(session.user.id);
+          setUserEmail(storedEmail || session.user.email);
+          setUserName(storedName || "User");
         } else {
-          // User not found, ensure states are reset or default
-          setUserId(null);
-          setUserEmail("");
-          setUserName("User");
+          console.error("No session found");
+          // If no session, clear localStorage and redirect will happen via ProtectedRoute
         }
       } catch (error) {
         console.error("Error fetching user:", error);
