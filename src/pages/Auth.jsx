@@ -241,7 +241,7 @@ function Auth() {
               </TabsTrigger>
               <TabsTrigger
                 value="signup"
-                className="rounded-lg data-[state=active]:bg-[#CEFF00] data-[state=active]:text-[#0D0D0D] transition-all"
+                className="rounded-lg data-[state=active]:bg-black data-[state=active]:text-white transition-all text-gray-700"
               >
                 Sign Up
               </TabsTrigger>
@@ -275,7 +275,7 @@ function Auth() {
                       placeholder="••••••••"
                       value={signInData.password}
                       onChange={(e) => setSignInData({ ...signInData, password: e.target.value })}
-                      className="bg-white/5 border-[#CEFF00]/20 text-white pl-11 pr-11 h-12 focus:border-[#CEFF00]"
+                      className="bg-white border-gray-300 text-gray-900 pl-11 pr-11 h-12 focus:border-black focus:ring-1 focus:ring-black"
                     />
                     <button
                       type="button"
@@ -327,7 +327,7 @@ function Auth() {
                       placeholder="John Doe"
                       value={signUpData.name}
                       onChange={(e) => setSignUpData({ ...signUpData, name: e.target.value })}
-                      className="bg-white/5 border-[#CEFF00]/20 text-white pl-11 h-12 focus:border-[#CEFF00]"
+                      className="bg-white border-gray-300 text-gray-900 pl-11 h-12 focus:border-black focus:ring-1 focus:ring-black"
                     />
                   </div>
                 </div>
@@ -342,7 +342,7 @@ function Auth() {
                       placeholder="you@example.com"
                       value={signUpData.email}
                       onChange={(e) => setSignUpData({ ...signUpData, email: e.target.value })}
-                      className="bg-white/5 border-[#CEFF00]/20 text-white pl-11 h-12 focus:border-[#CEFF00]"
+                      className="bg-white border-gray-300 text-gray-900 pl-11 h-12 focus:border-black focus:ring-1 focus:ring-black"
                     />
                   </div>
                 </div>
@@ -371,12 +371,12 @@ function Auth() {
                       placeholder="••••••••"
                       value={signUpData.password}
                       onChange={(e) => setSignUpData({ ...signUpData, password: e.target.value })}
-                      className="bg-white/5 border-[#CEFF00]/20 text-white pl-11 pr-11 h-12 focus:border-[#CEFF00]"
+                      className="bg-white border-gray-300 text-gray-900 pl-11 pr-11 h-12 focus:border-black focus:ring-1 focus:ring-black"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-900"
                     >
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
@@ -394,7 +394,7 @@ function Auth() {
                       placeholder="••••••••"
                       value={signUpData.confirmPassword}
                       onChange={(e) => setSignUpData({ ...signUpData, confirmPassword: e.target.value })}
-                      className="bg-white/5 border-[#CEFF00]/20 text-white pl-11 pr-11 h-12 focus:border-[#CEFF00]"
+                      className="bg-white border-gray-300 text-gray-900 pl-11 pr-11 h-12 focus:border-black focus:ring-1 focus:ring-black"
                     />
                   </div>
                 </div>
@@ -419,7 +419,7 @@ function Auth() {
                 Already have an account?{" "}
                 <button
                   onClick={() => setActiveTab("signin")}
-                  className="text-[#CEFF00] hover:underline font-semibold"
+                  className="text-indigo-600 hover:underline font-semibold"
                 >
                   Sign in here
                 </button>
