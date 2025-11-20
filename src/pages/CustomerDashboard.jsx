@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, MessageCircle, Eye, Package, Loader2, Edit, Trash2, ShoppingBag, Search, Star, Filter as FilterIcon } from "lucide-react";
+import { Plus, MessageCircle, Eye, Package, Loader2, Edit, Trash2, ShoppingBag, Search, Star, Filter as FilterIcon, FileText } from "lucide-react";
 import PostRequirementModal from "../components/PostRequirementModal";
 import EditPostModal from "../components/EditPostModal";
 import ItemDetailsModal from "../components/ItemDetailsModal";
 import ChatWindow from "../components/ChatWindow";
 import ProtectedRoute from "../components/ProtectedRoute";
+import MyQuotes from "../components/MyQuotes";
 import { Input } from "@/components/ui/input";
 import {
   Dialog,
@@ -19,6 +20,7 @@ import { toast } from "sonner";
 
 function CustomerDashboard() {
   const queryClient = useQueryClient();
+  const [activeTab, setActiveTab] = useState("requests"); // "requests" or "quotes"
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingPost, setEditingPost] = useState(null);
@@ -404,328 +406,382 @@ function CustomerDashboard() {
             </div>
           </div>
 
-          {/* Browse Vendor Inventory */}
-          <div className="mb-16">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
-              <div>
-                <h2 className="text-3xl font-bold mb-2 flex items-center gap-3">
-                  <ShoppingBag className="w-8 h-8 text-indigo-600" />
-                  Browse Vendor Inventory
-                </h2>
-                <p className="text-gray-600">Discover pre-listed items from vendors</p>
+          {/* Tab Navigation */}
+          <div className="flex gap-4 mb-8 border-b border-gray-200">
+            <button
+              onClick={() => setActiveTab("requests")}
+              className={`pb-4 px-2 font-semibold transition-colors relative ${activeTab === "requests"
+                ? "text-indigo-600"
+                : "text-gray-600 hover:text-gray-900"
+                }`}
+            >
+              <div className="flex items-center gap-2">
+                <Package className="w-5 h-5" />
+                My Requests
               </div>
-            </div>
-
-            {/* Search and Filter */}
-            <div className="glass-card p-4 rounded-2xl mb-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-600" />
-                  <Input
-                    placeholder="Search products..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="bg-white border border-gray-200 border-gray-200 text-gray-900 pl-11"
-                  />
-                </div>
-
-                <select
-                  value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="w-full h-10 bg-white border border-gray-200 border border-gray-200 text-gray-900 rounded-lg px-4 focus:border-indigo-600 focus:outline-none"
-                >
-                  <option value="all" className="bg-white">All Categories</option>
-                  {categories.map(cat => (
-                    <option key={cat} value={cat} className="bg-white">{cat}</option>
-                  ))}
-                </select>
+              {activeTab === "requests" && (
+                <motion.div
+                  layoutId="activeTab"
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600"
+                />
+              )}
+            </button>
+            <button
+              onClick={() => setActiveTab("quotes")}
+              className={`pb-4 px-2 font-semibold transition-colors relative ${activeTab === "quotes"
+                ? "text-indigo-600"
+                : "text-gray-600 hover:text-gray-900"
+                }`}
+            >
+              <div className="flex items-center gap-2">
+                <FileText className="w-5 h-5" />
+                My Quotes
               </div>
-            </div>
-
-            {/* Inventory Grid */}
-            {inventoryLoading ? (
-              <div className="text-center py-12">
-                <Loader2 className="w-12 h-12 text-indigo-600 animate-spin mx-auto" />
-              </div>
-            ) : filteredInventory.length === 0 ? (
-              <div className="glass-card p-12 rounded-2xl text-center">
-                <Package className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                <p className="text-gray-600 text-lg">
-                  {searchQuery || selectedCategory !== 'all'
-                    ? 'No items match your search'
-                    : 'No items available yet'}
-                </p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {filteredInventory.map((item) => (
-                  <motion.div
-                    key={item.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    whileHover={{ scale: 1.03 }}
-                    onClick={() => handleItemClick(item)}
-                    className="glass-card rounded-2xl overflow-hidden hover:border-black transition-all cursor-pointer group"
-                  >
-                    <div className="relative h-40 bg-gray-200">
-                      {item.images && item.images.length > 0 ? (
-                        <img
-                          src={item.images[0]}
-                          alt={item.product_name}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                          onError={(e) => e.target.src = 'https://via.placeholder.com/400?text=Product'}
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <Package className="w-12 h-12 text-gray-600" />
-                        </div>
-                      )}
-                      {item.is_featured && (
-                        <div className="absolute top-2 left-2 bg-black text-white px-2 py-1 rounded-lg flex items-center gap-1 text-xs font-semibold">
-                          <Star className="w-3 h-3 fillbg-gray-50" />
-                        </div>
-                      )}
-                      {item.stock === 0 && (
-                        <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
-                          <span className="text-red-400 font-bold">Out of Stock</span>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="p-4">
-                      <h3 className="font-semibold line-clamp-1 group-hover:text-black transition-colors mb-1">
-                        {item.product_name}
-                      </h3>
-                      <p className="text-xs text-gray-600 mb-2">{item.category}</p>
-                      <div className="flex items-center justify-between">
-                        <p className="text-xl font-bold text-indigo-600">₹{item.price}</p>
-                        <p className="text-xs text-gray-600">by {item.vendor_name}</p>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            )}
+              {activeTab === "quotes" && (
+                <motion.div
+                  layoutId="activeTab"
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600"
+                />
+              )}
+            </button>
           </div>
 
-          {/* My Requests */}
-          <div>
-            <h2 className="text-2xl font-bold mb-6">My Custom Requests</h2>
-            {postsLoading ? (
-              <div className="text-center py-12">
-                <Loader2 className="w-12 h-12 text-indigo-600 animate-spin mx-auto" />
-              </div>
-            ) : posts.length === 0 ? (
-              <div className="glass-card p-12 rounded-2xl text-center">
-                <Package className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                <p className="text-gray-600 text-lg mb-4">You haven't posted any requests yet</p>
-                <button
-                  onClick={() => setIsPostModalOpen(true)}
-                  className="glow-button px-6 py-3 rounded-xl font-semibold"
-                >
-                  Post Your First Request
-                </button>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {posts.map((post) => {
-                  const quotesCount = getQuotesForPost(post.id).length;
-                  return (
-                    <motion.div
-                      key={post.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="glass-card p-6 rounded-2xl hover:border-black/50 transition-all"
+          {/* Tab Content */}
+          {activeTab === "quotes" ? (
+            <MyQuotes
+              userId={userId}
+              userRole="customer"
+              onOpenChat={(conversation) => {
+                setChatConversation(conversation);
+                setIsChatOpen(true);
+              }}
+            />
+          ) : (
+            <>
+              {/* Browse Vendor Inventory */}
+              <div className="mb-16">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+                  <div>
+                    <h2 className="text-3xl font-bold mb-2 flex items-center gap-3">
+                      <ShoppingBag className="w-8 h-8 text-indigo-600" />
+                      Browse Vendor Inventory
+                    </h2>
+                    <p className="text-gray-600">Discover pre-listed items from vendors</p>
+                  </div>
+                </div>
+
+                {/* Search and Filter */}
+                <div className="glass-card p-4 rounded-2xl mb-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-600" />
+                      <Input
+                        placeholder="Search products..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="bg-white border border-gray-200 border-gray-200 text-gray-900 pl-11"
+                      />
+                    </div>
+
+                    <select
+                      value={selectedCategory}
+                      onChange={(e) => setSelectedCategory(e.target.value)}
+                      className="w-full h-10 bg-white border border-gray-200 border border-gray-200 text-gray-900 rounded-lg px-4 focus:border-indigo-600 focus:outline-none"
                     >
-                      <div className="mb-4">
-                        <div className="flex items-start justify-between mb-2">
-                          <h3 className="text-lg font-semibold line-clamp-2 flex-1 pr-2">{post.title}</h3>
-                          <span className="px-2 py-1 bg-gray-200 text-black text-xs rounded-full flex-shrink-0">
-                            {post.category}
-                          </span>
+                      <option value="all" className="bg-white">All Categories</option>
+                      {categories.map(cat => (
+                        <option key={cat} value={cat} className="bg-white">{cat}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Inventory Grid */}
+                {inventoryLoading ? (
+                  <div className="text-center py-12">
+                    <Loader2 className="w-12 h-12 text-indigo-600 animate-spin mx-auto" />
+                  </div>
+                ) : filteredInventory.length === 0 ? (
+                  <div className="glass-card p-12 rounded-2xl text-center">
+                    <Package className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+                    <p className="text-gray-600 text-lg">
+                      {searchQuery || selectedCategory !== 'all'
+                        ? 'No items match your search'
+                        : 'No items available yet'}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    {filteredInventory.map((item) => (
+                      <motion.div
+                        key={item.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        whileHover={{ scale: 1.03 }}
+                        onClick={() => handleItemClick(item)}
+                        className="glass-card rounded-2xl overflow-hidden hover:border-black transition-all cursor-pointer group"
+                      >
+                        <div className="relative h-40 bg-gray-200">
+                          {item.images && item.images.length > 0 ? (
+                            <img
+                              src={item.images[0]}
+                              alt={item.product_name}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                              onError={(e) => e.target.src = 'https://via.placeholder.com/400?text=Product'}
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center">
+                              <Package className="w-12 h-12 text-gray-600" />
+                            </div>
+                          )}
+                          {item.is_featured && (
+                            <div className="absolute top-2 left-2 bg-black text-white px-2 py-1 rounded-lg flex items-center gap-1 text-xs font-semibold">
+                              <Star className="w-3 h-3 fillbg-gray-50" />
+                            </div>
+                          )}
+                          {item.stock === 0 && (
+                            <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
+                              <span className="text-red-400 font-bold">Out of Stock</span>
+                            </div>
+                          )}
                         </div>
-                        <p className="text-gray-600 text-sm line-clamp-2 mb-3">{post.description}</p>
-                        {post.images && post.images.length > 0 && (
-                          <div className="flex gap-2 mb-3 overflow-x-auto">
-                            {post.images.slice(0, 3).map((img, idx) => (
-                              <img
-                                key={idx}
-                                src={img}
-                                alt={`${post.title} ${idx + 1}`}
-                                className="w-24 h-24 object-cover rounded-lg flex-shrink-0"
-                                onError={(e) => e.target.src = 'https://via.placeholder.com/96?text=Image'}
-                              />
-                            ))}
-                            {post.images.length > 3 && (
-                              <div className="w-24 h-24 bg-white border border-gray-200 rounded-lg flex items-center justify-center text-xs text-gray-600">
-                                +{post.images.length - 3}
+
+                        <div className="p-4">
+                          <h3 className="font-semibold line-clamp-1 group-hover:text-black transition-colors mb-1">
+                            {item.product_name}
+                          </h3>
+                          <p className="text-xs text-gray-600 mb-2">{item.category}</p>
+                          <div className="flex items-center justify-between">
+                            <p className="text-xl font-bold text-indigo-600">₹{item.price}</p>
+                            <p className="text-xs text-gray-600">by {item.vendor_name}</p>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* My Requests */}
+              <div>
+                <h2 className="text-2xl font-bold mb-6">My Custom Requests</h2>
+                {postsLoading ? (
+                  <div className="text-center py-12">
+                    <Loader2 className="w-12 h-12 text-indigo-600 animate-spin mx-auto" />
+                  </div>
+                ) : posts.length === 0 ? (
+                  <div className="glass-card p-12 rounded-2xl text-center">
+                    <Package className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+                    <p className="text-gray-600 text-lg mb-4">You haven't posted any requests yet</p>
+                    <button
+                      onClick={() => setIsPostModalOpen(true)}
+                      className="glow-button px-6 py-3 rounded-xl font-semibold"
+                    >
+                      Post Your First Request
+                    </button>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {posts.map((post) => {
+                      const quotesCount = getQuotesForPost(post.id).length;
+                      return (
+                        <motion.div
+                          key={post.id}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="glass-card p-6 rounded-2xl hover:border-black/50 transition-all"
+                        >
+                          <div className="mb-4">
+                            <div className="flex items-start justify-between mb-2">
+                              <h3 className="text-lg font-semibold line-clamp-2 flex-1 pr-2">{post.title}</h3>
+                              <span className="px-2 py-1 bg-gray-200 text-black text-xs rounded-full flex-shrink-0">
+                                {post.category}
+                              </span>
+                            </div>
+                            <p className="text-gray-600 text-sm line-clamp-2 mb-3">{post.description}</p>
+                            {post.images && post.images.length > 0 && (
+                              <div className="flex gap-2 mb-3 overflow-x-auto">
+                                {post.images.slice(0, 3).map((img, idx) => (
+                                  <img
+                                    key={idx}
+                                    src={img}
+                                    alt={`${post.title} ${idx + 1}`}
+                                    className="w-24 h-24 object-cover rounded-lg flex-shrink-0"
+                                    onError={(e) => e.target.src = 'https://via.placeholder.com/96?text=Image'}
+                                  />
+                                ))}
+                                {post.images.length > 3 && (
+                                  <div className="w-24 h-24 bg-white border border-gray-200 rounded-lg flex items-center justify-center text-xs text-gray-600">
+                                    +{post.images.length - 3}
+                                  </div>
+                                )}
                               </div>
                             )}
                           </div>
-                        )}
-                      </div>
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="text-2xl font-bold text-indigo-600">₹{post.budget}</span>
-                        <span className="text-sm text-gray-600">{quotesCount} quotes</span>
-                      </div>
-                      <div className="grid grid-cols-2 gap-2 mb-2">
-                        <button
-                          onClick={() => handleEdit(post)}
-                          className="py-2 bg-blue-500/10 border border-blue-500/30 rounded-lg font-semibold hover:bg-blue-500/20 transition-colors flex items-center justify-center space-x-2"
-                        >
-                          <Edit className="w-4 h-4" />
-                          <span>Edit</span>
-                        </button>
-                        <button
-                          onClick={() => handleDelete(post)}
-                          className="py-2 bg-red-500/10 border border-red-500/30 rounded-lg font-semibold hover:bg-red-500/20 transition-colors flex items-center justify-center space-x-2"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                          <span>Delete</span>
-                        </button>
-                      </div>
-                      <button
-                        onClick={() => handleViewQuotes(post)}
-                        className="w-full py-2 bg-black/10 border border-indigo-200/30 rounded-lg font-semibold hover:bg-gray-200 transition-colors flex items-center justify-center space-x-2"
-                      >
-                        <Eye className="w-4 h-4" />
-                        <span>View Quotes</span>
-                      </button>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-
-          {/* Modals */}
-          <PostRequirementModal
-            isOpen={isPostModalOpen}
-            onClose={() => setIsPostModalOpen(false)}
-            onSubmit={handlePostSubmit}
-          />
-
-          <EditPostModal
-            isOpen={isEditModalOpen}
-            onClose={() => {
-              setIsEditModalOpen(false);
-              setEditingPost(null);
-            }}
-            post={editingPost}
-            onUpdate={handleUpdate}
-          />
-
-          {/* Delete Confirmation Dialog */}
-          <AnimatePresence>
-            {deleteConfirm && (
-              <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  className="glass-card rounded-2xl p-6 max-w-md w-full"
-                >
-                  <h3 className="text-xl font-bold mb-4">Delete Requirement?</h3>
-                  <p className="text-gray-600 mb-6">
-                    Are you sure you want to delete "{deleteConfirm.title}"? This action cannot be undone.
-                  </p>
-                  <div className="flex gap-3">
-                    <button
-                      onClick={() => setDeleteConfirm(null)}
-                      className="flex-1 py-2 glass-card rounded-lg font-semibold hover:border-black/50 transition-colors"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={confirmDelete}
-                      className="flex-1 py-2 bg-red-500 hover:bg-red-600 rounded-lg font-semibold transition-colors"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </motion.div>
-              </div>
-            )}
-          </AnimatePresence>
-
-          {/* Quotes Dialog */}
-          <Dialog open={!!selectedPost} onOpenChange={() => setSelectedPost(null)}>
-            <DialogContent className="bg-white border-gray-200 max-w-3xl text-gray-900">
-              <DialogHeader>
-                <DialogTitle className="text-2xl font-bold">
-                  Quotes for "{selectedPost?.title}"
-                </DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4 max-h-96 overflow-y-auto">
-                {postQuotes.length === 0 ? (
-                  <p className="text-gray-600 text-center py-8">No quotes yet</p>
-                ) : (
-                  postQuotes.map((quote) => (
-                    <div key={quote.id} className="glass-card p-6 rounded-2xl">
-                      <div className="flex items-start justify-between mb-4">
-                        <div>
-                          <h4 className="text-lg font-semibold">{quote.vendor_name}</h4>
-                          <p className="text-sm text-gray-600">{quote.vendor_email}</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-2xl font-bold text-indigo-600">₹{quote.price_total}</p>
-                          <p className="text-sm text-gray-600">{quote.delivery_days} days</p>
-                        </div>
-                      </div>
-                      <p className="text-gray-700 mb-4">{quote.message}</p>
-                      <div className="flex gap-3">
-                        <button
-                          onClick={() => {
-                            setSelectedPost(null);
-                            handleOpenChat(quote);
-                          }}
-                          className="flex-1 py-2 bg-white border border-gray-200 hover:bg-gray-100 rounded-lg font-semibold flex items-center justify-center space-x-2 transition-colors"
-                        >
-                          <MessageCircle className="w-4 h-4" />
-                          <span>Chat</span>
-                        </button>
-                        {quote.status !== 'accepted' && (
-                          <button
-                            onClick={() => acceptQuoteMutation.mutate(quote)}
-                            disabled={acceptQuoteMutation.isPending}
-                            className="flex-1 py-2 glow-button rounded-lg font-semibold flex items-center justify-center space-x-2"
-                          >
-                            {acceptQuoteMutation.isPending ? (
-                              <Loader2 className="w-4 h-4 animate-spin" />
-                            ) : (
-                              <span>Accept Quote</span>
-                            )}
-                          </button>
-                        )}
-                        {quote.status === 'accepted' && (
-                          <div className="flex-1 py-2 bg-green-500/20 text-green-400 rounded-lg font-semibold flex items-center justify-center">
-                            Accepted
+                          <div className="flex items-center justify-between mb-4">
+                            <span className="text-2xl font-bold text-indigo-600">₹{post.budget}</span>
+                            <span className="text-sm text-gray-600">{quotesCount} quotes</span>
                           </div>
-                        )}
-                      </div>
-                    </div>
-                  ))
+                          <div className="grid grid-cols-2 gap-2 mb-2">
+                            <button
+                              onClick={() => handleEdit(post)}
+                              className="py-2 bg-blue-500/10 border border-blue-500/30 rounded-lg font-semibold hover:bg-blue-500/20 transition-colors flex items-center justify-center space-x-2"
+                            >
+                              <Edit className="w-4 h-4" />
+                              <span>Edit</span>
+                            </button>
+                            <button
+                              onClick={() => handleDelete(post)}
+                              className="py-2 bg-red-500/10 border border-red-500/30 rounded-lg font-semibold hover:bg-red-500/20 transition-colors flex items-center justify-center space-x-2"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                              <span>Delete</span>
+                            </button>
+                          </div>
+                          <button
+                            onClick={() => handleViewQuotes(post)}
+                            className="w-full py-2 bg-black/10 border border-indigo-200/30 rounded-lg font-semibold hover:bg-gray-200 transition-colors flex items-center justify-center space-x-2"
+                          >
+                            <Eye className="w-4 h-4" />
+                            <span>View Quotes</span>
+                          </button>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
                 )}
               </div>
-            </DialogContent>
-          </Dialog>
 
-          <ItemDetailsModal
-            isOpen={isItemDetailsOpen}
-            onClose={() => {
-              setIsItemDetailsOpen(false);
-              setSelectedItem(null);
-            }}
-            item={selectedItem}
-            onRequest={handleItemRequest}
-          />
+              {/* Modals */}
+              <PostRequirementModal
+                isOpen={isPostModalOpen}
+                onClose={() => setIsPostModalOpen(false)}
+                onSubmit={handlePostSubmit}
+              />
 
-          <ChatWindow
-            isOpen={isChatOpen}
-            onClose={() => setIsChatOpen(false)}
-            conversation={chatConversation}
-            currentUserEmail={userEmail}
-          />
+              <EditPostModal
+                isOpen={isEditModalOpen}
+                onClose={() => {
+                  setIsEditModalOpen(false);
+                  setEditingPost(null);
+                }}
+                post={editingPost}
+                onUpdate={handleUpdate}
+              />
+
+              {/* Delete Confirmation Dialog */}
+              <AnimatePresence>
+                {deleteConfirm && (
+                  <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      className="glass-card rounded-2xl p-6 max-w-md w-full"
+                    >
+                      <h3 className="text-xl font-bold mb-4">Delete Requirement?</h3>
+                      <p className="text-gray-600 mb-6">
+                        Are you sure you want to delete "{deleteConfirm.title}"? This action cannot be undone.
+                      </p>
+                      <div className="flex gap-3">
+                        <button
+                          onClick={() => setDeleteConfirm(null)}
+                          className="flex-1 py-2 glass-card rounded-lg font-semibold hover:border-black/50 transition-colors"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          onClick={confirmDelete}
+                          className="flex-1 py-2 bg-red-500 hover:bg-red-600 rounded-lg font-semibold transition-colors"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </motion.div>
+                  </div>
+                )}
+              </AnimatePresence>
+
+              {/* Quotes Dialog */}
+              <Dialog open={!!selectedPost} onOpenChange={() => setSelectedPost(null)}>
+                <DialogContent className="bg-white border-gray-200 max-w-3xl text-gray-900">
+                  <DialogHeader>
+                    <DialogTitle className="text-2xl font-bold">
+                      Quotes for "{selectedPost?.title}"
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4 max-h-96 overflow-y-auto">
+                    {postQuotes.length === 0 ? (
+                      <p className="text-gray-600 text-center py-8">No quotes yet</p>
+                    ) : (
+                      postQuotes.map((quote) => (
+                        <div key={quote.id} className="glass-card p-6 rounded-2xl">
+                          <div className="flex items-start justify-between mb-4">
+                            <div>
+                              <h4 className="text-lg font-semibold">{quote.vendor_name}</h4>
+                              <p className="text-sm text-gray-600">{quote.vendor_email}</p>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-2xl font-bold text-indigo-600">₹{quote.price_total}</p>
+                              <p className="text-sm text-gray-600">{quote.delivery_days} days</p>
+                            </div>
+                          </div>
+                          <p className="text-gray-700 mb-4">{quote.message}</p>
+                          <div className="flex gap-3">
+                            <button
+                              onClick={() => {
+                                setSelectedPost(null);
+                                handleOpenChat(quote);
+                              }}
+                              className="flex-1 py-2 bg-white border border-gray-200 hover:bg-gray-100 rounded-lg font-semibold flex items-center justify-center space-x-2 transition-colors"
+                            >
+                              <MessageCircle className="w-4 h-4" />
+                              <span>Chat</span>
+                            </button>
+                            {quote.status !== 'accepted' && (
+                              <button
+                                onClick={() => acceptQuoteMutation.mutate(quote)}
+                                disabled={acceptQuoteMutation.isPending}
+                                className="flex-1 py-2 glow-button rounded-lg font-semibold flex items-center justify-center space-x-2"
+                              >
+                                {acceptQuoteMutation.isPending ? (
+                                  <Loader2 className="w-4 h-4 animate-spin" />
+                                ) : (
+                                  <span>Accept Quote</span>
+                                )}
+                              </button>
+                            )}
+                            {quote.status === 'accepted' && (
+                              <div className="flex-1 py-2 bg-green-500/20 text-green-400 rounded-lg font-semibold flex items-center justify-center">
+                                Accepted
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </DialogContent>
+              </Dialog>
+
+              <ItemDetailsModal
+                isOpen={isItemDetailsOpen}
+                onClose={() => {
+                  setIsItemDetailsOpen(false);
+                  setSelectedItem(null);
+                }}
+                item={selectedItem}
+                onRequest={handleItemRequest}
+              />
+
+              <ChatWindow
+                isOpen={isChatOpen}
+                onClose={() => setIsChatOpen(false)}
+                conversation={chatConversation}
+                currentUserEmail={userEmail}
+              />
+            </>
+          )}
         </div>
       </div>
     </ProtectedRoute>
