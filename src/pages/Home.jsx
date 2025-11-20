@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { motion } from "framer-motion";
-import { 
-  ShoppingBag, 
-  Shield, 
-  Zap, 
+import {
+  ShoppingBag,
+  Shield,
+  Zap,
   Lock,
   ArrowRight,
   ChevronDown
@@ -36,20 +36,20 @@ const features = [
 ];
 
 const categories = [
-  { 
-    name: "Fashion", 
+  {
+    name: "Fashion",
     image: "https://images.unsplash.com/photo-1445205170230-053b83016050?w=800"
   },
-  { 
-    name: "Electronics", 
+  {
+    name: "Electronics",
     image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800"
   },
-  { 
-    name: "Furniture", 
+  {
+    name: "Furniture",
     image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800"
   },
-  { 
-    name: "Home & Kitchen", 
+  {
+    name: "Home & Kitchen",
     image: "https://images.unsplash.com/photo-1556911220-bff31c812dba?w=800"
   }
 ];
@@ -74,7 +74,7 @@ function Home() {
   return (
     <div className="overflow-hidden">
       {/* Fixed Navigation for Homepage */}
-      <motion.nav 
+      <motion.nav
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5 }}
@@ -107,50 +107,50 @@ function Home() {
       <section className="relative min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 pt-14">
         {/* Background Images */}
         <div className="fixed inset-0 pointer-events-none overflow-hidden opacity-10">
-          <img 
-            src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400" 
+          <img
+            src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400"
             alt="Shoes"
             className="absolute top-20 right-10 w-32 h-32 object-cover rounded-2xl floating-animation"
             style={{ animationDelay: '0s' }}
           />
-          <img 
-            src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400" 
+          <img
+            src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400"
             alt="Furniture"
             className="absolute top-40 left-20 w-40 h-40 object-cover rounded-2xl floating-animation"
             style={{ animationDelay: '1s' }}
           />
-          <img 
-            src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400" 
+          <img
+            src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400"
             alt="Electronics"
             className="absolute bottom-40 right-32 w-36 h-36 object-cover rounded-2xl floating-animation"
             style={{ animationDelay: '2s' }}
           />
-          <img 
-            src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400" 
+          <img
+            src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400"
             alt="Watch"
             className="absolute bottom-20 left-40 w-28 h-28 object-cover rounded-2xl floating-animation"
             style={{ animationDelay: '1.5s' }}
           />
-          <img 
-            src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=400" 
+          <img
+            src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=400"
             alt="Sneakers"
             className="absolute top-1/3 right-1/4 w-32 h-32 object-cover rounded-2xl floating-animation opacity-60"
             style={{ animationDelay: '0.5s' }}
           />
-          <img 
-            src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=400" 
+          <img
+            src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=400"
             alt="Laptop"
             className="absolute bottom-1/3 left-1/4 w-36 h-36 object-cover rounded-2xl floating-animation opacity-60"
             style={{ animationDelay: '1.8s' }}
           />
-          <img 
-            src="https://images.unsplash.com/photo-1585386959984-a4155224a1ad?w=400" 
+          <img
+            src="https://images.unsplash.com/photo-1585386959984-a4155224a1ad?w=400"
             alt="Perfume"
             className="absolute top-1/2 left-10 w-24 h-24 object-cover rounded-2xl floating-animation opacity-60"
             style={{ animationDelay: '2.5s' }}
           />
-          <img 
-            src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400" 
+          <img
+            src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400"
             alt="Sunglasses"
             className="absolute bottom-1/4 right-10 w-28 h-28 object-cover rounded-2xl floating-animation opacity-60"
             style={{ animationDelay: '1.2s' }}
@@ -166,7 +166,7 @@ function Home() {
             {/* Logo/Brand Name */}
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-4 px-4 leading-tight">
               <span className="text-white">EASY</span>
-              <span className="neon-text">CUSTOMIZED</span>
+              <span className="neon-text">CUSTOMIZED v2.0 (Test)</span>
             </h1>
 
             {/* Tagline */}
@@ -186,7 +186,7 @@ function Home() {
                   <ArrowRight className="w-5 h-5" />
                 </motion.button>
               </Link>
-              
+
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -278,10 +278,10 @@ function Home() {
                   alt={category.name}
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
-                
+
                 {/* Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
-                
+
                 {/* Category Name */}
                 <div className="absolute bottom-0 left-0 right-0 p-6">
                   <h3 className="text-2xl font-bold text-white group-hover:text-[#CEFF00] transition-colors">
@@ -319,19 +319,19 @@ function Home() {
                 initial={{ opacity: 0, x: -50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ 
-                  duration: 0.6, 
+                transition={{
+                  duration: 0.6,
                   delay: index * 0.15,
                   type: "spring",
                   stiffness: 100
                 }}
-                whileHover={{ 
+                whileHover={{
                   scale: 1.02,
                   transition: { duration: 0.2 }
                 }}
                 className="glass-card p-4 sm:p-6 lg:p-8 rounded-2xl hover:border-[#CEFF00]/50 transition-all duration-300 flex items-start gap-3 sm:gap-4 lg:gap-6"
               >
-                <motion.div 
+                <motion.div
                   className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-[#CEFF00] rounded-full flex items-center justify-center text-[#0D0D0D] font-bold text-lg sm:text-xl"
                   whileHover={{ rotate: 360 }}
                   transition={{ duration: 0.5 }}
