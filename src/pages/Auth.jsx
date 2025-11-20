@@ -112,14 +112,14 @@ function Auth() {
       localStorage.setItem('userName', profile.display_name);
       localStorage.setItem('userRole', profile.role);
 
-      toast.success("Signed in successfully - Auth disabled for testing");
+      toast.success("Signed in successfully");
 
-      // AUTH DISABLED FOR TESTING ONLY - No redirect
-      // if (profile.role === 'customer') {
-      //   navigate(createPageUrl('CustomerDashboard'), { replace: true });
-      // } else {
-      //   navigate(createPageUrl('VendorDashboard'), { replace: true });
-      // }
+      // Re-enabled manual login redirect
+      if (profile.role === 'customer') {
+        navigate(createPageUrl('CustomerDashboard'), { replace: true });
+      } else {
+        navigate(createPageUrl('VendorDashboard'), { replace: true });
+      }
     } catch (err) {
       console.error("Sign in error:", err);
       setError(err.message || "An error occurred. Please try again.");
@@ -192,14 +192,14 @@ function Auth() {
         localStorage.setItem('userName', signUpData.name);
         localStorage.setItem('userRole', signUpData.role);
 
-        toast.success("Account created successfully - Auth disabled for testing");
+        toast.success("Account created successfully");
 
-        // AUTH DISABLED FOR TESTING ONLY - No redirect
-        // if (signUpData.role === 'customer') {
-        //   navigate(createPageUrl('CustomerDashboard'), { replace: true });
-        // } else {
-        //   navigate(createPageUrl('VendorDashboard'), { replace: true });
-        // }
+        // Re-enabled manual signup redirect
+        if (signUpData.role === 'customer') {
+          navigate(createPageUrl('CustomerDashboard'), { replace: true });
+        } else {
+          navigate(createPageUrl('VendorDashboard'), { replace: true });
+        }
       }
     } catch (err) {
       console.error("Sign up error:", err);
