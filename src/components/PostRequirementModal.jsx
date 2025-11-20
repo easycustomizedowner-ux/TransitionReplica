@@ -187,7 +187,10 @@ export default function PostRequirementModal({ isOpen, onClose, onSubmit }) { //
                     type="button"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={() => setFormData({ ...formData, category: cat.name })}
+                    onClick={() => {
+                      setFormData({ ...formData, category: cat.name });
+                      setStep(2);
+                    }}
                     className={`p-4 rounded-xl text-left transition-all ${formData.category === cat.name
                       ? 'bg-[#CEFF00]/20 border-2 border-[#CEFF00]'
                       : 'glass-card hover:border-[#CEFF00]/50'
@@ -327,6 +330,7 @@ export default function PostRequirementModal({ isOpen, onClose, onSubmit }) { //
           {step < 4 ? (
             <button
               onClick={handleNext}
+              id="next-button"
               className="flex-1 py-3 glow-button rounded-xl font-semibold flex items-center justify-center space-x-2"
             >
               <span>Next</span>
@@ -335,6 +339,7 @@ export default function PostRequirementModal({ isOpen, onClose, onSubmit }) { //
           ) : (
             <button
               onClick={handleSubmit}
+              id="submit-post-button"
               className="flex-1 py-3 glow-button rounded-xl font-semibold"
             >
               Post Requirement
