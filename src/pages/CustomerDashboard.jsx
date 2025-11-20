@@ -37,31 +37,38 @@ function CustomerDashboard() {
 
   useEffect(() => {
     const getUser = async () => {
+      console.log("CustomerDashboard: Starting getUser...");
       try {
         // First try to get from localStorage (set by Auth.jsx)
         const storedEmail = localStorage.getItem('userEmail');
         const storedName = localStorage.getItem('userName');
+        console.log("CustomerDashboard: localStorage values:", { storedEmail, storedName });
 
         // Then get session from Supabase
         const { data: { session } } = await supabase.auth.getSession();
+        console.log("CustomerDashboard: Supabase session:", session?.user?.id);
 
         if (session?.user) {
           setUserId(session.user.id);
           setUserEmail(storedEmail || session.user.email);
           setUserName(storedName || "User");
+          console.log("CustomerDashboard: User set successfully");
         } else {
-          console.error("No session found");
+          console.error("CustomerDashboard: No session found");
           // If no session, clear localStorage and redirect will happen via ProtectedRoute
         }
       } catch (error) {
-        console.error("Error fetching user:", error);
+        console.error("CustomerDashboard: Error fetching user:", error);
       } finally {
+        console.log("CustomerDashboard: Setting userLoading to false");
         setUserLoading(false);
       }
     };
 
     getUser();
   }, []);
+
+  console.log("CustomerDashboard: Render - userLoading:", userLoading, "userId:", userId);
 
   if (userLoading) {
     return (

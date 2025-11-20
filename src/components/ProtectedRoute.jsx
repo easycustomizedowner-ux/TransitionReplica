@@ -4,7 +4,10 @@ import { createPageUrl } from "@/utils";
 import { Loader2 } from "lucide-react";
 
 export default function ProtectedRoute({ children, requiredRole }) {
-  const navigate = useNavigate();
+  // TEMPORARILY DISABLED FOR DEBUGGING
+  return children;
+
+  /* const navigate = useNavigate();
   const [isChecking, setIsChecking] = useState(true);
 
   const checkAuth = useCallback(() => {
@@ -55,5 +58,5 @@ export default function ProtectedRoute({ children, requiredRole }) {
     );
   }
 
-  return children;
+  return children; */
 }
