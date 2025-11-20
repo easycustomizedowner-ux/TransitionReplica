@@ -4,31 +4,63 @@
 
 @layer base {
   :root {
+    /* Light Mode Design Tokens - Base Layer */
     --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
+    /* Pure white */
+    --foreground: 240 10% 3.9%;
+    /* Almost black text */
+
+    /* Surface & Card Tokens */
+    --card: 0 0% 98%;
+    /* Subtle off-white for cards */
+    --card-foreground: 240 10% 3.9%;
+
+    /* Popover & Overlay Tokens */
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
+    --popover-foreground: 240 10% 3.9%;
+
+    /* Primary Action Tokens */
+    --primary: 240 5.9% 10%;
+    /* Dark for buttons */
     --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
+    /* Light text on dark buttons */
+
+    /* Secondary Tokens */
+    --secondary: 240 4.8% 95.9%;
+    /* Light gray for secondary elements */
+    --secondary-foreground: 240 5.9% 10%;
+
+    /* Muted Tokens */
+    --muted: 240 4.8% 95.9%;
+    /* Muted backgrounds */
+    --muted-foreground: 240 3.8% 46.1%;
+    /* Muted text */
+
+    /* Accent Tokens */
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+
+    /* Destructive Tokens */
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
+
+    /* Border & Input Tokens */
+    --border: 240 5.9% 90%;
+    /* Visible borders */
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
+
+    /* Chart Tokens */
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
+
+    /* Radius */
     --radius: 0.5rem;
+
+    /* Sidebar Tokens */
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
@@ -53,33 +85,77 @@
 }
 
 @layer components {
+
+  /* Glass Card - Light Mode with Visible Borders */
   .glass-card {
-    @apply bg-white/80 backdrop-blur-md border border-gray-200 shadow-sm;
+    @apply bg-white/90 backdrop-blur-md border border-gray-200 shadow-sm;
   }
 
+  /* Neon Text - Gradient for Light Mode */
   .neon-text {
-    @apply text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600 font-extrabold;
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 font-extrabold;
   }
 
+  /* Glow Button - Dark button on light background */
   .glow-button {
     @apply bg-black text-white hover:bg-gray-800 transition-all shadow-md hover:shadow-lg active:scale-95;
   }
 
+  /* Floating Animation - Enhanced for Light Mode */
   .floating-animation {
     animation: float 6s ease-in-out infinite;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
   }
 
   @keyframes float {
-    0% {
-      transform: translateY(0px);
+
+    0%,
+    100% {
+      transform: translateY(0px) rotate(0deg);
+      opacity: 0.15;
     }
 
     50% {
-      transform: translateY(-20px);
+      transform: translateY(-20px) rotate(5deg);
+      opacity: 0.25;
+    }
+  }
+
+  /* Background Bubbles - Enhanced Visibility */
+  .bubble-bg {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    opacity: 0.08;
+    z-index: 0;
+  }
+
+  .bubble {
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.3));
+    filter: blur(40px);
+    animation: bubble-float 20s ease-in-out infinite;
+  }
+
+  @keyframes bubble-float {
+
+    0%,
+    100% {
+      transform: translate(0, 0) scale(1);
     }
 
-    100% {
-      transform: translateY(0px);
+    25% {
+      transform: translate(100px, -100px) scale(1.1);
+    }
+
+    50% {
+      transform: translate(-50px, -200px) scale(0.9);
+    }
+
+    75% {
+      transform: translate(-150px, -100px) scale(1.05);
     }
   }
 }
