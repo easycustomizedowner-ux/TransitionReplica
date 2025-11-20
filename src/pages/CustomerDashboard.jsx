@@ -70,14 +70,6 @@ function CustomerDashboard() {
 
   console.log("CustomerDashboard: Render - userLoading:", userLoading, "userId:", userId);
 
-  if (userLoading) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <Loader2 className="w-12 h-12 text-indigo-600 animate-spin" />
-      </div>
-    );
-  }
-
   const { data: posts = [], isLoading: postsLoading } = useQuery({
     queryKey: ['customer-posts', userId],
     queryFn: async () => {
@@ -353,6 +345,15 @@ function CustomerDashboard() {
   };
 
   const postQuotes = selectedPost ? getQuotesForPost(selectedPost.id) : [];
+
+  // Check if still loading user data
+  if (userLoading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <Loader2 className="w-12 h-12 text-indigo-600 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <ProtectedRoute requiredRole="customer">

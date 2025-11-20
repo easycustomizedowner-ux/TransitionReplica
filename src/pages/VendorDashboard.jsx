@@ -63,13 +63,7 @@ function VendorDashboard() {
     getUser();
   }, []);
 
-  if (userLoading) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <Loader2 className="w-12 h-12 text-indigo-600 animate-spin" />
-      </div>
-    );
-  }
+  // ALL HOOKS MUST BE CALLED BEFORE ANY CONDITIONAL RETURNS
 
   // Fetch all customer posts (ads)
   const { data: allPosts = [], isLoading: postsLoading } = useQuery({
@@ -362,6 +356,16 @@ function VendorDashboard() {
     "Corporate & Branding",
     "Other Custom Requests"
   ];
+
+
+  // Check if still loading user data
+  if (userLoading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <Loader2 className="w-12 h-12 text-indigo-600 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <ProtectedRoute requiredRole="vendor">
