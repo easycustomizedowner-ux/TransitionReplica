@@ -182,14 +182,14 @@ function Auth() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900 font-sans selection:bg-[#CEFF00] selection:text-black overflow-hidden flex items-center justify-center px-4 py-12 relative">
+    <div className="min-h-screen bg-white text-gray-900 font-sans selection:bg-indigo-100 selection:text-indigo-900 overflow-hidden flex items-center justify-center px-4 py-12 relative">
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-100"></div>
 
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#CEFF00]/5 rounded-full blur-3xl floating-animation"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#CEFF00]/5 rounded-full blur-3xl floating-animation" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl floating-animation"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl floating-animation" style={{ animationDelay: '2s' }}></div>
       </div>
 
       <motion.div
@@ -208,7 +208,7 @@ function Auth() {
           {/* Logo */}
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold mb-2">
-              <span className="text-white">EASY</span>
+              <span className="text-gray-900">EASY</span>
               <span className="neon-text">CUSTOMIZED</span>
             </h1>
             <p className="text-gray-600">
@@ -232,10 +232,10 @@ function Auth() {
 
           {/* Tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-8 bg-white/5 p-1 rounded-xl">
+            <TabsList className="grid w-full grid-cols-2 mb-8 bg-gray-100 p-1 rounded-xl">
               <TabsTrigger
                 value="signin"
-                className="rounded-lg data-[state=active]:bg-[#CEFF00] data-[state=active]:text-[#0D0D0D] transition-all"
+                className="rounded-lg data-[state=active]:bg-black data-[state=active]:text-white transition-all text-gray-700"
               >
                 Sign In
               </TabsTrigger>
@@ -251,7 +251,7 @@ function Auth() {
             <TabsContent value="signin">
               <form onSubmit={handleSignIn} className="space-y-5">
                 <div>
-                  <Label htmlFor="signin-email" className="text-white mb-2 block">Email</Label>
+                  <Label htmlFor="signin-email" className="text-gray-900 font-medium mb-2 block">Email</Label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <Input
@@ -260,13 +260,13 @@ function Auth() {
                       placeholder="you@example.com"
                       value={signInData.email}
                       onChange={(e) => setSignInData({ ...signInData, email: e.target.value })}
-                      className="bg-white/5 border-[#CEFF00]/20 text-white pl-11 h-12 focus:border-[#CEFF00]"
+                      className="bg-white border-gray-300 text-gray-900 pl-11 h-12 focus:border-black focus:ring-1 focus:ring-black"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <Label htmlFor="signin-password" className="text-white mb-2 block">Password</Label>
+                  <Label htmlFor="signin-password" className="text-gray-900 font-medium mb-2 block">Password</Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <Input
@@ -280,7 +280,7 @@ function Auth() {
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-900"
                     >
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
@@ -307,7 +307,7 @@ function Auth() {
                 New to EASYCUSTOMIZED?{" "}
                 <button
                   onClick={() => setActiveTab("signup")}
-                  className="text-[#CEFF00] hover:underline font-semibold"
+                  className="text-indigo-600 hover:underline font-semibold"
                 >
                   Sign up to create your account
                 </button>
@@ -318,7 +318,7 @@ function Auth() {
             <TabsContent value="signup">
               <form onSubmit={handleSignUp} className="space-y-5">
                 <div>
-                  <Label htmlFor="signup-name" className="text-white mb-2 block">Full Name</Label>
+                  <Label htmlFor="signup-name" className="text-gray-900 font-medium mb-2 block">Full Name</Label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <Input
@@ -333,7 +333,7 @@ function Auth() {
                 </div>
 
                 <div>
-                  <Label htmlFor="signup-email" className="text-white mb-2 block">Email</Label>
+                  <Label htmlFor="signup-email" className="text-gray-900 font-medium mb-2 block">Email</Label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <Input
@@ -348,21 +348,21 @@ function Auth() {
                 </div>
 
                 <div>
-                  <Label htmlFor="signup-role" className="text-white mb-2 block">I want to</Label>
+                  <Label htmlFor="signup-role" className="text-gray-900 font-medium mb-2 block">I want to</Label>
                   <select
                     id="signup-role"
                     value={signUpData.role}
                     onChange={(e) => setSignUpData({ ...signUpData, role: e.target.value })}
-                    className="w-full h-12 bg-white/5 border border-[#CEFF00]/20 text-white rounded-lg px-4 focus:border-[#CEFF00] focus:outline-none"
+                    className="w-full h-12 bg-white border border-gray-300 text-gray-900 rounded-lg px-4 focus:border-black focus:ring-1 focus:ring-black focus:outline-none"
                   >
-                    <option value="" className="bg-[#1A1A1A]">Select your role</option>
-                    <option value="customer" className="bg-[#1A1A1A]">Buy Products (Customer)</option>
-                    <option value="vendor" className="bg-[#1A1A1A]">Sell Products (Vendor)</option>
+                    <option value="" className="bg-white">Select your role</option>
+                    <option value="customer" className="bg-white">Buy Products (Customer)</option>
+                    <option value="vendor" className="bg-white">Sell Products (Vendor)</option>
                   </select>
                 </div>
 
                 <div>
-                  <Label htmlFor="signup-password" className="text-white mb-2 block">Password</Label>
+                  <Label htmlFor="signup-password" className="text-gray-900 font-medium mb-2 block">Password</Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <Input
@@ -385,7 +385,7 @@ function Auth() {
                 </div>
 
                 <div>
-                  <Label htmlFor="signup-confirm-password" className="text-white mb-2 block">Confirm Password</Label>
+                  <Label htmlFor="signup-confirm-password" className="text-gray-900 font-medium mb-2 block">Confirm Password</Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <Input
