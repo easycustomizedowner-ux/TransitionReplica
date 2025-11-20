@@ -49,11 +49,17 @@ function Auth() {
           // Fetch user profile to get role
           const { data: profile } = await supabase
             .from('profiles')
-            .select('role')
+            .select('role, display_name, email')
             .eq('id', session.user.id)
             .single();
 
           if (profile) {
+            // Set localStorage for consistency with login flow
+            localStorage.setItem('isAuthenticated', 'true');
+            localStorage.setItem('userEmail', profile.email || session.user.email);
+            localStorage.setItem('userName', profile.display_name);
+            localStorage.setItem('userRole', profile.role);
+
             // Redirect to appropriate dashboard with replace to prevent back button issues
             if (profile.role === 'customer') {
               navigate(createPageUrl('CustomerDashboard'), { replace: true });

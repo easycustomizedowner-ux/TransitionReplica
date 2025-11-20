@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChatProvider } from "@/components/ChatContext";
+import { supabase } from "@/lib/supabase";
 
 export default function Layout({ children, currentPageName }) {
   const location = useLocation();
@@ -35,13 +36,18 @@ export default function Layout({ children, currentPageName }) {
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    // Clear Supabase session
+    await supabase.auth.signOut();
+
+    // Clear localStorage
     localStorage.removeItem('userRole');
     localStorage.removeItem('userName');
     localStorage.removeItem('userEmail');
     localStorage.removeItem('isAuthenticated');
+
     setUser(null);
-    navigate(createPageUrl('Home'));
+    navigate(createPageUrl('Auth'), { replace: true });
   };
 
   const isActive = (pageName) => location.pathname === createPageUrl(pageName);
