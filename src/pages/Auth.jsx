@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { supabase } from "@/lib/supabase";
@@ -11,6 +11,7 @@ import { toast } from "sonner";
 
 function Auth() {
   const navigate = useNavigate();
+  const hasCheckedAuth = useRef(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isAuthChecking, setIsAuthChecking] = useState(true);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
@@ -33,11 +34,13 @@ function Auth() {
   useEffect(() => {
     // Check if user is already logged in
     const checkAuth = async () => {
-      // Don't check if user is actively logging in
-      if (isLoggingIn) {
+      // Only run once - prevent multiple checks
+      if (hasCheckedAuth.current) {
         setIsAuthChecking(false);
         return;
       }
+
+      hasCheckedAuth.current = true;
 
       try {
         const { data: { session } } = await supabase.auth.getSession();
